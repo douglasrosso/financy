@@ -1,9 +1,24 @@
+import jwt from "jsonwebtoken";
+import mapCookies from "../cookie.js";
+const secretKey = "financy";
+
 const authMiddleware = (req, res, next) => {
-  if (!req.session.isAuthenticated) {
+  const cookieString = req.headers["cookie"];
+  const cookies = mapCookies(cookieString);
+
+  if (!cookies?.auth) {
     res.redirect("/");
-  } else {
-    next();
+    return;
   }
+
+  jwt.verify(cookies.auth, secretKey, (err, user) => {
+    if (err) {
+      res.redirect("/");
+    } else {
+      req.user = user;
+      next();
+    }
+  });
 };
 
 export default authMiddleware;
