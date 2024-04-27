@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PFC - Lançamentos</title>
+    <link rel="stylesheet" href="./css/global.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Lançamentos</h1>
+      <div class="filter-group">
+        <label for="filterMonth">Mês:</label>
+        <select id="filterMonth" name="filterMonth" class="form-control">
+          <option value="">Todos</option>
+          <option value="1">Janeiro</option>
+          <option value="2">Fevereiro</option>
+        </select>
+      </div>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Descrição</th>
+            <th>Categoria</th>
+            <th>Valor</th>
+            <th>Tipo</th>
+            <th>Conta</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#newEntryModal"
+        >
+          Novo Lançamento
+        </button>
+      </div>
+    </div>
+    <script async></script>
+  </body>
+</html>

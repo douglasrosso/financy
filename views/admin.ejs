@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+    <link rel="stylesheet" href="./css/global.css" />
+    <link rel="stylesheet" href="./css/admin.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Admin</h1>
+      <nav>
+        <ul>
+          <li><a href="/categorias">Cadastro de Categorias</a></li>
+          <li><a href="/cadastro-conta">Cadastro de Contas</a></li>
+          <li><a href="/cadastro-usuario">Cadastro de Usuários</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="lancamentos">
+        <h2>Lançamentos do Dia</h2>
+        <ul>
+          <!-- Aqui serão exibidos os lançamentos do dia -->
+        </ul>
+      </section>
+
+      <!-- Adicione os botões de CRUD para receitas e despesas aqui -->
+      <section id="crud-receitas">
+        <a href="/receitas-despesas">Receitas e Despesas</a>
+        <h2>Receitas</h2>
+        <button id="criar-receita">Criar Receita</button>
+        <button id="ler-receitas">Listar Receitas</button>
+        <button id="atualizar-receita">Atualizar Receita</button>
+        <button id="deletar-receita">Deletar Receita</button>
+      </section>
+
+      <section id="crud-despesas">
+        <h2>Despesas</h2>
+        <button id="criar-despesa">Criar Despesa</button>
+        <button id="ler-despesas">Listar Despesas</button>
+        <button id="atualizar-despesa">Atualizar Despesa</button>
+        <button id="deletar-despesa">Deletar Despesa</button>
+      </section>
+    </main>
+    <script async></script>
+  </body>
+</html>

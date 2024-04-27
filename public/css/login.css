@@ -1,0 +1,19 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: unset;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-danger {
+  color: #c0392b;
+  background-color: #fdd8d8;
+  border-color: #d7ccc8;
+  padding: 10px;
+  border-radius: 3px;
+}

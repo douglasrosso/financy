@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Categorias</title>
+    <link rel="stylesheet" href="./css/global.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Cadastro de Categorias</h1>
+    </header>
+
+    <main>
+      <form>
+        <div class="form-container">
+          <div class="form-group">
+            <label for="id">ID:</label>
+            <input
+              placeholder="Digite um ID existente para alterar a categoria"
+              type="text"
+              id="id"
+              name="id"
+              required
+              disabled
+            />
+            <button id="btnEditar">Editar existente</button>
+          </div>
+          <div class="form-group">
+            <label for="descricao">Descrição da Categoria:</label>
+            <input
+              placeholder="Digite a descrição de uma categoria "
+              type="text"
+              id="descricao"
+              name="descricao"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo" required>
+              <option value="Receita">Receita</option>
+              <option value="Despesa">Despesa</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <table id="tabelaCategorias">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Descrição</th>
+                <th>Tipo</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="submit">Salvar</button>
+      </form>
+    </main>
+    <script async type="module">
+      import gerarUUID from "./js/gerarUUID.js";
+      import baseApi from "./js/baseApi.js";
+
+      window.addEventListener("load", () => {
+        const form = document.querySelector("form");
+        const btnEditar = document.getElementById("btnEditar");
+        const inputId = document.getElementById("id");
+
+        buscarCategorias();
+
+        btnEditar.addEventListener("click", (event) => {
+          if (inputId.disabled) {
+            inputId.disabled = false;
+            btnEditar.textContent = "Cancelar Edição";
+          } else {
+            inputId.disabled = true;
+            inputId.value = "";
+            btnEditar.textContent = "Editar existente";
+          }
+        });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const formData = new FormData(form);
+          const id = formData.get("id");
+
+          const payload = {
+            id: id,
+            description: formData.get("descricao"),
+            type: formData.get("tipo"),
+          };
+
+          if (id && id.trim() !== "") {
+            atualizarCategoria(id, payload);
+          } else {
+            payload.id = gerarUUID();
+            salvarCategoria(payload);
+          }
+
+          id = "";
+          inputId.value = "";
+          btnEditar.textContent = "Editar existente";
+          inputId.disabled = true;
+          form.reset();
+        });
+
+        function buscarCategorias() {
+          baseApi("/api/categorias")
+            .then((response) => response.json())
+            .then((data) => {
+              tabelaCategorias.querySelector("tbody").innerHTML = "";
+              data.forEach((categoria) => {
+                const linha = document.createElement("tr");
+                linha.innerHTML = `
+                  <td>${categoria.id}</td>
+                  <td>${categoria.description}</td>
+                  <td>${categoria.type}</td>
+                `;
+                tabelaCategorias.querySelector("tbody").appendChild(linha);
+              });
+            })
+            .catch((error) =>
+              console.error("Erro ao buscar categorias:", error)
+            );
+        }
+
+        function atualizarCategoria(id, categoria) {
+          baseApi(`/api/categorias/${id}`, "PUT", categoria)
+            .then(() => {
+              buscarCategorias();
+            })
+            .catch((error) =>
+              console.error("Erro ao atualizar categoria:", error)
+            );
+        }
+
+        function salvarCategoria(categoria) {
+          baseApi("/api/categorias", "POST", categoria)
+            .then(() => {
+              buscarCategorias();
+            })
+            .catch((error) =>
+              console.error("Erro ao salvar categoria:", error)
+            );
+        }
+      });
+    </script>
+  </body>
+</html>
