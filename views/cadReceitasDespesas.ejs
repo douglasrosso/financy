@@ -1,202 +1,240 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cadastro de Receitas e Despesas</title>
-    <link rel="stylesheet" href="./css/global.css" />
-  </head>
-  <body>
-    <header>
-      <h1>Cadastro de Receitas e Despesas</h1>
-    </header>
 
-    <main>
-      <form>
-        <div class="form-group">
-          <label for="id">ID:</label>
-          <input
-            placeholder="Digite um ID existente para alterar a conta"
-            type="text"
-            id="id"
-            name="id"
-            required
-            disabled
-          />
-          <button id="btnEditar">Editar existente</button>
-        </div>
-        <div class="form-group">
-          <label for="tipo">Tipo:</label>
-          <select id="tipo" name="tipo" required>
-            <option value="Receita">Receita</option>
-            <option value="Despesa">Despesa</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="categorias">Categoria:</label>
-          <input type="text" id="categorias" name="categorias" required />
-        </div>
-        <div class="form-group">
-          <label for="descricao">Descrição:</label>
-          <input type="text" id="descricao" name="descricao" required />
-        </div>
-        <div class="form-group">
-          <label for="valor">Valor:</label>
-          <input type="text" id="valor" name="valor" required />
-        </div>
-        <div class="form-group">
-          <label for="dataVencimento">Data de Vencimento:</label>
-          <input
-            type="date"
-            id="dataVencimento"
-            name="dataVencimento"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="dataPagamento">Data de Pagamento:</label>
-          <input type="date" id="dataPagamento" name="dataPagamento" />
-        </div>
-        <div class="form-group">
-          <label for="conta">Conta:</label>
-          <input type="text" id="conta" name="conta" required />
-        </div>
-        <div class="form-group">
-          <label for="status">Status:</label>
-          <select id="status" name="status" required>
-            <option value="Lancada">Lançada</option>
-            <option value="Confirmada">Confirmada</option>
-            <option value="Paga">Paga</option>
-            <option value="Cancelada">Cancelada</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="ativo">Comentários:</label>
-          <textarea id="ativo" name="ativo"></textarea>
-        </div>
-        <div class="form-group">
-          <table id="tabelaReceitasDespesas">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Categorias</th>
-                <th>Descrição</th>
-                <th>Valor</th>
-                <th>Data de vencimento</th>
-                <th>Data da pagamento</th>
-                <th>Conta</th>
-                <th>Status</th>
-                <th>Ativo</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <button type="submit">Salvar</button>
-      </form>
-    </main>
-    <script async type="module">
-      import baseApi from "./js/baseApi.js";
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro de Receitas e Despesas</title>
+  <link rel="stylesheet" href="./css/global.css" />
+</head>
 
-      window.addEventListener("load", () => {
-        const form = document.querySelector("form");
-        const btnEditar = document.getElementById("btnEditar");
-        const inputId = document.getElementById("id");
+<body>
+  <header>
+    <h1>Cadastro de Receitas e Despesas</h1>
+  </header>
 
-        buscarReceitasDespesas();
+  <main>
+    <form>
+      <div class="form-group">
+        <label for="id">ID:</label>
+        <input placeholder="Digite um ID existente para alterar a conta" type="text" id="id" name="id" required
+          disabled />
+        <button id="btnEditar">Editar existente</button>
+      </div>
+      <div class="form-group">
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo" required>
+          <option value="Receita">Receita</option>
+          <option value="Despesa">Despesa</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="categorias">Categoria:</label>
+        <select id="categorias" name="categorias" required>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricao" name="descricao" required />
+      </div>
+      <div class="form-group">
+        <label for="valor">Valor:</label>
+        <input type="text" id="valor" name="valor" required />
+      </div>
+      <div class="form-group">
+        <label for="dataVencimento">Data de Vencimento:</label>
+        <input type="date" id="dataVencimento" name="dataVencimento" required />
+      </div>
+      <div class="form-group">
+        <label for="dataPagamento">Data de Pagamento:</label>
+        <input type="date" id="dataPagamento" name="dataPagamento" />
+      </div>
+      <div class="form-group">
+        <label for="conta">Conta:</label>
+        <select id="conta" name="conta" required>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+          <option value="Lancada">Lançada</option>
+          <option value="Confirmada">Confirmada</option>
+          <option value="Paga">Paga</option>
+          <option value="Cancelada">Cancelada</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="ativo">Ativa:</label>
+        <div style="display: flex; align-items: center;">
+          <input type="checkbox" id="ativo" name="ativo" style="margin: 0 5px 5px; height: 20px; width: 20px;"></input>
+          <label for="ativo" style="font-weight: 400;">Clique para marcar...</label>
+        </div>
+      </div>
+      <div class="form-group" style="overflow-x: auto;">
+        <table id="tabelaReceitasDespesas">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo</th>
+              <th>Categorias</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Data de vencimento</th>
+              <th>Data da pagamento</th>
+              <th>Conta</th>
+              <th>Status</th>
+              <th>Ativa</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button type="submit">Salvar</button>
+    </form>
+  </main>
+  <script async type="module">
+    import gerarUUID from "./js/gerarUUID.js";
+    import baseApi from "./js/baseApi.js";
 
-        btnEditar.addEventListener("click", (event) => {
-          if (inputId.disabled) {
-            inputId.disabled = false;
-            btnEditar.textContent = "Cancelar Edição";
-          } else {
-            inputId.disabled = true;
-            inputId.value = "";
-            btnEditar.textContent = "Editar existente";
-          }
-        });
+    window.addEventListener("load", () => {
+      const form = document.querySelector("form");
+      const btnEditar = document.getElementById("btnEditar");
+      const inputId = document.getElementById("id");
 
-        form.addEventListener("submit", (event) => {
-          event.preventDefault();
-          const formData = new FormData(form);
-          const id = formData.get("id");
+      buscarCategorias();
+      buscarContas();
+      buscarReceitasDespesas();
 
-          const payload = {
-            id: id,
-            type: formData.get("tipo"),
-            categories: formData.get("categorias"),
-            description: formData.get("descricao"),
-            value: formData.get("valor"),
-            due_date: formData.get("dataVencimento"),
-            payment_date: formData.get("dataPagamento"),
-            account: formData.get("conta"),
-            status: formData.get("status"),
-            comments: formData.get("ativo"),
-          };
-
-          if (id && id.trim() !== "") {
-            atualizarReceitaDespesa(id, payload);
-          } else {
-            salvarReceitaDespesa(payload);
-          }
-
-          id = "";
+      btnEditar.addEventListener("click", (event) => {
+        if (inputId.disabled) {
+          inputId.disabled = false;
+          btnEditar.textContent = "Cancelar Edição";
+        } else {
+          inputId.disabled = true;
           inputId.value = "";
           btnEditar.textContent = "Editar existente";
-          inputId.disabled = true;
-          form.reset();
-        });
-
-        function buscarReceitasDespesas() {
-          baseApi("/api/receitas-despesas")
-            .then((response) => response.json())
-            .then((data) => {
-              tabelaReceitasDespesas.querySelector("tbody").innerHTML = "";
-              data.forEach((receitaDespesa) => {
-                const linha = document.createElement("tr");
-                linha.innerHTML = `
-                  <td>${receitaDespesa.id}</td>
-                  <td>${receitaDespesa.value}</td>
-                  <td>${receitaDespesa.description}</td>
-                  <td>${receitaDespesa.type}</td>
-                  <td>${receitaDespesa.categories}</td>
-                  <td>${receitaDespesa.due_date}</td>
-                  <td>${receitaDespesa.payment_date}</td>
-                  <td>${receitaDespesa.account}</td>
-                  <td>${receitaDespesa.status}</td>
-                  <td>${receitaDespesa.comments}</td>
-                `;
-                tabelaReceitasDespesas
-                  .querySelector("tbody")
-                  .appendChild(linha);
-              });
-            })
-            .catch((error) =>
-              console.error("Erro ao buscar receitas e despesas:", error)
-            );
-        }
-
-        function atualizarReceitaDespesa(id, receitaDespesa) {
-          baseApi(`/api/receitas-despesas/${id}`, "PUT", receitaDespesa)
-            .then(() => {
-              buscarReceitasDespesas();
-            })
-            .catch((error) =>
-              console.error("Erro ao atualizar receita ou despesa:", error)
-            );
-        }
-
-        function salvarReceitaDespesa(receitaDespesa) {
-          baseApi("/api/receitas-despesas", "POST", receitaDespesa)
-            .then(() => {
-              buscarReceitasDespesas();
-            })
-            .catch((error) =>
-              console.error("Erro ao salvar receita ou despesa:", error)
-            );
         }
       });
-    </script>
-  </body>
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const categoriaSelecionada = document.getElementById("categorias");
+        const contaSelecionada = document.getElementById("conta");
+        const checkboxAtivo = document.getElementById("ativo");
+        const formData = new FormData(form);
+        const id = formData.get("id");
+
+        const payload = {
+          id: id,
+          type: formData.get("tipo"),
+          categories: categoriaSelecionada.options[categoriaSelecionada.selectedIndex].textContent,
+          description: formData.get("descricao"),
+          value: formData.get("valor"),
+          due_date: formData.get("dataVencimento"),
+          payment_date: formData.get("dataPagamento"),
+          account: contaSelecionada.options[contaSelecionada.selectedIndex].textContent,
+          status: formData.get("status"),
+          comments: checkboxAtivo.checked ? "on" : "off",
+        };
+
+        if (id && id.trim() !== "") {
+          atualizarReceitaDespesa(id, payload);
+        } else {
+          payload.id = gerarUUID();
+          salvarReceitaDespesa(payload);
+        }
+
+        id = "";
+        inputId.value = "";
+        btnEditar.textContent = "Editar existente";
+        inputId.disabled = true;
+        form.reset();
+      });
+
+      function buscarCategorias() {
+        baseApi("/api/categorias")
+          .then((response) => response.json())
+          .then((data) => {
+            const selectCategorias = document.getElementById("categorias");
+            data.forEach((categoria) => {
+              const option = document.createElement("option");
+              option.value = categoria.id;
+              option.textContent = categoria.description;
+              selectCategorias.appendChild(option);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao buscar categorias:", error)
+          );
+      }
+
+      function buscarContas() {
+        baseApi("/api/contas")
+          .then((response) => response.json())
+          .then((data) => {
+            const selectContas = document.getElementById("conta");
+            selectContas.innerHTML = "";
+            data.forEach((conta) => {
+              const option = document.createElement("option");
+              option.value = conta.id;
+              option.textContent = conta.description;
+              selectContas.appendChild(option);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao buscar contas:", error)
+          );
+      }
+
+      function buscarReceitasDespesas() {
+        baseApi("/api/receitas-despesas")
+          .then((response) => response.json())
+          .then((data) => {
+            const tabelaReceitasDespesas = document.getElementById("tabelaReceitasDespesas").querySelector("tbody");
+            tabelaReceitasDespesas.innerHTML = "";
+            data.forEach((receitaDespesa) => {
+              const linha = document.createElement("tr");
+              linha.innerHTML = `
+                            <td>${receitaDespesa.id}</td>
+                            <td>${receitaDespesa.type}</td>
+                            <td>${receitaDespesa.categories}</td>
+                            <td>${receitaDespesa.description}</td>
+                            <td>${receitaDespesa.value}</td>
+                            <td>${receitaDespesa.due_date}</td>
+                            <td>${receitaDespesa.payment_date}</td>
+                            <td>${receitaDespesa.account}</td>
+                            <td>${receitaDespesa.status}</td>
+                            <td>${receitaDespesa.comments ? receitaDespesa.comments.toLowerCase() == "on" ? "Sim" : "Não" : "Não"}</td>
+                        `;
+              tabelaReceitasDespesas.appendChild(linha);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao buscar receitas e despesas:", error)
+          );
+      }
+
+      function atualizarReceitaDespesa(id, receitaDespesa) {
+        baseApi(`/api/receitas-despesas/${id}`, "PUT", receitaDespesa)
+          .then(() => {
+            buscarReceitasDespesas();
+          })
+          .catch((error) =>
+            console.error("Erro ao atualizar receita ou despesa:", error)
+          );
+      }
+
+      function salvarReceitaDespesa(receitaDespesa) {
+        baseApi("/api/receitas-despesas", "POST", receitaDespesa)
+          .then(() => {
+            buscarReceitasDespesas();
+          })
+          .catch((error) =>
+            console.error("Erro ao salvar receita ou despesa:", error)
+          );
+      }
+    });
+  </script>
+</body>
+
 </html>

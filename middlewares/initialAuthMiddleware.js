@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import mapCookies from "../cookie.js";
+import mapCookies from "../cookies.js";
 const secretKey = "financy";
 
 const initialRouteMiddleware = (req, res, next) => {

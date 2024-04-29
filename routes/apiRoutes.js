@@ -181,13 +181,13 @@ function useApiRoutes(router) {
     if (index !== -1) {
       entriesData[index].description = description;
       entriesData[index].type = type;
-      entriesData[index].type = categories;
-      entriesData[index].type = value;
-      entriesData[index].type = due_date;
-      entriesData[index].type = payment_date;
-      entriesData[index].type = account;
-      entriesData[index].type = status;
-      entriesData[index].type = comments;
+      entriesData[index].categories = categories;
+      entriesData[index].value = value;
+      entriesData[index].due_date = due_date;
+      entriesData[index].payment_date = payment_date;
+      entriesData[index].account = account;
+      entriesData[index].status = status;
+      entriesData[index].comments = comments;
       fs.writeFileSync(
         "./data/entries.json",
         JSON.stringify(entriesData, null, 2)
