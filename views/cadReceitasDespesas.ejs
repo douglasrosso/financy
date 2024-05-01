@@ -27,19 +27,18 @@
         <div class="form-group">
           <label for="id">ID:</label>
           <input placeholder="Digite um ID existente para alterar a receita / despesa" type="text" id="id" name="id"
-            required disabled value="<%= receitasDespesas.id %>" />
-          <!-- <button id="btnEditar" style="<%= receitasDespesas.id ? 'display: none;' : '' %>">Editar existente</button> -->
+            required value="<%= receitasDespesas.id %>" />
         </div>
         <div class="form-group">
           <label for="tipo">Tipo:</label>
-          <select id="tipo" name="tipo" required <%=receitasDespesas.type ? "disabled" : "" %>>
+          <select id="tipo" name="tipo" required>
             <option value="Receita" <%=receitasDespesas.type==="Receita" ? "selected" : "" %>>Receita</option>
             <option value="Despesa" <%=receitasDespesas.type==="Despesa" ? "selected" : "" %>>Despesa</option>
           </select>
         </div>
         <div class="form-group">
           <label for="categorias">Categoria:</label>
-          <select id="categorias" name="categorias" required <%=receitasDespesas.categories ? "disabled" : "" %>>
+          <select id="categorias" name="categorias" required>
             <% if (receitasDespesas && receitasDespesas.categories) { %>
               <option value="<%= receitasDespesas.categories  %>" selected>
                 <%= receitasDespesas.categories %>
@@ -49,27 +48,24 @@
         </div>
         <div class="form-group">
           <label for="descricao">Descrição:</label>
-          <input type="text" id="descricao" name="descricao" required value="<%= receitasDespesas.description %>"
-            <%=receitasDespesas.description ? "disabled" : "" %> />
+          <input type="text" id="descricao" name="descricao" required value="<%= receitasDespesas.description %>" />
         </div>
         <div class="form-group">
           <label for="valor">Valor:</label>
-          <input type="text" id="valor" name="valor" required value="<%= receitasDespesas.value %>"
-            <%=receitasDespesas.value ? "disabled" : "" %>/>
+          <input type="text" id="valor" name="valor" required value="<%= receitasDespesas.value %>" />
         </div>
         <div class="form-group">
           <label for="dataVencimento">Data de Vencimento:</label>
-          <input type="date" id="dataVencimento" name="dataVencimento" required value="<%= receitasDespesas.due_date %>"
-            <%=receitasDespesas.due_date ? "disabled" : "" %> />
+          <input type="date" id="dataVencimento" name="dataVencimento" required
+            value="<%= receitasDespesas.due_date %>" />
         </div>
         <div class="form-group">
           <label for="dataPagamento">Data de Pagamento:</label>
-          <input type="date" id="dataPagamento" name="dataPagamento" value="<%= receitasDespesas.payment_date %>"
-            <%=receitasDespesas.payment_date ? "disabled" : "" %> />
+          <input type="date" id="dataPagamento" name="dataPagamento" value="<%= receitasDespesas.payment_date %>" />
         </div>
         <div class="form-group">
           <label for="conta">Conta:</label>
-          <select id="conta" name="conta" required <%=receitasDespesas.account ? "disabled" : "" %>>
+          <select id="conta" name="conta" required>
             <% if (receitasDespesas && receitasDespesas.account) { %>
               <option value="<%= receitasDespesas.account  %>" selected>
                 <%= receitasDespesas.account %>
@@ -94,9 +90,9 @@
               name="comentario"><%= receitasDespesas.comments %></textarea>
           </div>
         </div>
-
         <button type="submit">Salvar</button>
         <% } else { %>
+          <button id="novo">Novo lançamento</button>
           <div class="form-group" style="overflow-x: auto;">
             <table id="tabelaReceitasDespesas">
               <thead>
@@ -127,33 +123,20 @@
 
     window.addEventListener("load", () => {
       const form = document.querySelector("form");
-      // const btnEditar = document.getElementById("btnEditar");
       const inputId = document.getElementById("id");
 
       buscarCategorias();
       buscarContas();
       buscarReceitasDespesas();
 
-      // btnEditar.addEventListener("click", (event) => {
-      //   if (inputId.disabled) {
-      //     inputId.disabled = false;
-      //     btnEditar.textContent = "Cancelar Edição";
-      //   } else {
-      //     inputId.disabled = true;
-      //     inputId.value = "";
-      //     btnEditar.textContent = "Editar existente";
-      //   }
-      // });
-
       form.addEventListener("submit", (event) => {
         event.preventDefault();
         const categoriaSelecionada = document.getElementById("categorias");
         const contaSelecionada = document.getElementById("conta");
         const formData = new FormData(form);
-        const id = formData.get("id");
-
+        limparFormatacaoHTML()
         const payload = {
-          id: id,
+          id: formData.get("id"),
           type: formData.get("tipo"),
           categories: categoriaSelecionada.options[categoriaSelecionada.selectedIndex].textContent,
           description: formData.get("descricao"),
@@ -164,21 +147,43 @@
           status: formData.get("status"),
           comments: formData.get("comentario") ?? " ",
         };
-
+        debugger
         if (id && id.trim() !== "") {
           atualizarReceitaDespesa(id, payload);
+          window.location.href = "/lancamentos";
         } else {
           payload.id = gerarUUID();
           salvarReceitaDespesa(payload);
         }
 
-        // id = "";
-        // inputId.value = "";
-        // btnEditar.textContent = "Editar existente";
-        // inputId.disabled = true;
         form.reset();
       });
-      8
+
+      function limparFormatacaoHTML() {
+        const form = document.querySelector("form");
+        const inputs = form.querySelectorAll("input, select");
+
+        inputs.forEach(input => {
+          if (input.value && typeof input.value === 'string') {
+            input.value = input.value.trim();
+          }
+        });
+
+        const selects = form.querySelectorAll("select");
+        selects.forEach(select => {
+          const options = select.querySelectorAll("option");
+          options.forEach(option => {
+            if (option.textContent && typeof option.textContent === 'string') {
+              option.textContent = option.textContent.trim();
+            }
+          });
+        });
+      }
+
+
+
+
+
       function buscarCategorias() {
         baseApi("/api/categorias")
           .then((response) => response.json())
@@ -239,6 +244,10 @@
                             <td>${receitaDespesa.status}</td>
                             <td>${receitaDespesa.comments}</td>
                         `;
+              linha.addEventListener("click", () => {
+                const id = receitaDespesa.id;
+                window.location.href = `/lancamentos/${id}`;
+              });
               tabelaReceitasDespesas.appendChild(linha);
             });
           })
