@@ -18,10 +18,10 @@
     "description": "Pago pensão",
     "value": "1000",
     "due_date": "2024-04-09",
-    "payment_date": "2024-04-09",
+    "payment_date": "2024-05-11",
     "account": "abc da amazonia",
     "status": "Cancelada",
-    "comments": "off"
+    "comments": "Conta errada"
   },
   {
     "id": "16196462-9ff8-4ff4-a6ea-fbe3b43867ee",
@@ -30,9 +30,21 @@
     "description": "Bico do find",
     "value": "1300",
     "due_date": "2024-04-09",
-    "payment_date": "2024-04-09",
+    "payment_date": "2024-05-11",
     "account": "Conta Corrente",
     "status": "Confirmada",
     "comments": "on"
+  },
+  {
+    "id": "eb4980d6-d3e1-4d04-8a70-6abcee5db6de",
+    "type": "Despesa",
+    "categories": "Pensão",
+    "description": "Gastos com o carro",
+    "value": "500.55",
+    "due_date": "2024-04-02",
+    "payment_date": "2024-04-04",
+    "account": "Conta Corrente",
+    "status": "Confirmada",
+    "comments": ""
   }
 ]

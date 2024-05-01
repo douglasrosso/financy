@@ -1,47 +1,147 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PFC - Lançamentos</title>
-    <link rel="stylesheet" href="./css/global.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h1>Lançamentos</h1>
-      <div class="filter-group">
-        <label for="filterMonth">Mês:</label>
-        <select id="filterMonth" name="filterMonth" class="form-control">
-          <option value="">Todos</option>
-          <option value="1">Janeiro</option>
-          <option value="2">Fevereiro</option>
-        </select>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lançamentos</title>
+  <link rel="stylesheet" href="/css/global.css">
+</head>
+
+<body>
+  <header>
+    <h1>Lançamentos</h1>
+    <nav>
+      <ul>
+        <li><a href="/categorias">Categorias</a></li>
+        <li><a href="/cadastro-conta">Contas</a></li>
+        <li><a href="/cadastro-usuario">Usuários</a></li>
+        <li><a href="/receitas-despesas">Receitas e Despesas</a></li>
+        <li><a href="/lancamentos">Lançamentos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="filtros">
+      <h2>Filtros</h2>
+      <div>
+        <label for="mes">Mês:</label>
+        <input type="month" id="mes" name="mes">
       </div>
-      <table class="table table-striped">
+      <button id="btnFiltrar">Filtrar</button>
+    </section>
+
+    <section id="lista-lancamentos">
+      <h2>Lista de Lançamentos</h2>
+      <table>
         <thead>
           <tr>
-            <th>Data</th>
+            <th>Data de Vencimento</th>
             <th>Descrição</th>
-            <th>Categoria</th>
-            <th>Valor</th>
             <th>Tipo</th>
-            <th>Conta</th>
+            <th>Valor</th>
+            <th>Status</th>
             <th>Ações</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+        </tbody>
       </table>
-      <div class="btn-group">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-toggle="modal"
-          data-target="#newEntryModal"
-        >
-          Novo Lançamento
-        </button>
-      </div>
-    </div>
-    <script async></script>
-  </body>
+      <button id="btnNovoLancamento">Novo Lançamento</button>
+    </section>
+  </main>
+
+  <script async type="module">
+    import baseApi from "/js/baseApi.js";
+
+    window.addEventListener("load", () => {
+      const btnFiltrar = document.getElementById("btnFiltrar");
+      const btnNovoLancamento = document.getElementById("btnNovoLancamento");
+
+      btnFiltrar.addEventListener("click", () => {
+        const mes = document.getElementById("mes").value;
+        buscarLancamentosPorMes(mes);
+      });
+
+      btnNovoLancamento.addEventListener("click", () => {
+        window.location.href = "cadastro-lancamento.html";
+      });
+
+      function buscarReceitasDespesas() {
+        baseApi("/api/receitas-despesas")
+          .then((response) => response.json())
+          .then((data) => {
+            const tabelaReceitasDespesas = document.getElementById("tabelaReceitasDespesas").querySelector("tbody");
+            tabelaReceitasDespesas.innerHTML = "";
+            data.forEach((receitaDespesa) => {
+              const linha = document.createElement("tr");
+              linha.innerHTML = `
+                            <td>${receitaDespesa.id}</td>
+                            <td>${receitaDespesa.type}</td>
+                            <td>${receitaDespesa.categories}</td>
+                            <td>${receitaDespesa.description}</td>
+                            <td>${receitaDespesa.value}</td>
+                            <td>${receitaDespesa.due_date}</td>
+                            <td>${receitaDespesa.payment_date}</td>
+                            <td>${receitaDespesa.account}</td>
+                            <td>${receitaDespesa.status}</td>
+                            <td>${receitaDespesa.comments}</td>
+                        `;
+              tabelaReceitasDespesas.appendChild(linha);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao buscar receitas e despesas:", error)
+          );
+      }
+
+      function buscarLancamentosPorMes(mes) {
+        baseApi(`/api/lancamentos?mes=${mes}`)
+          .then(response => response.json())
+          .then(data => {
+            const listaLancamentos = document.querySelector("#lista-lancamentos tbody");
+            listaLancamentos.innerHTML = "";
+
+            data.forEach(lancamento => {
+              const linha = document.createElement("tr");
+              linha.innerHTML = `
+                                <td>${lancamento.due_date}</td>
+                                <td>${lancamento.description}</td>
+                                <td>${lancamento.type}</td>
+                                <td>${lancamento.value}</td>
+                                <td>${lancamento.status}</td>
+                                <td>
+                                    <button onclick="editarLancamento('${lancamento.id}')">Editar</button>
+                                    <button onclick="confirmarLancamento('${lancamento.id}')">Confirmar</button>
+                                    <button onclick="realizarPagamento('${lancamento.id}')">Pagar</button>
+                                    <button onclick="cancelarLancamento('${lancamento.id}')">Cancelar</button>
+                                </td>
+                            `;
+              listaLancamentos.appendChild(linha);
+            });
+          })
+          .catch(error => console.error("Erro ao buscar lançamentos:", error));
+      }
+
+      function editarLancamento(id) {
+
+        window.location.href = `editar-lancamento.html?id=${id}`;
+      }
+
+      function confirmarLancamento(id) {
+        console.log(`Lançamento ${id} confirmado.`);
+      }
+
+      function realizarPagamento(id) {
+        console.log(`Pagamento do lançamento ${id} realizado.`);
+      }
+
+      function cancelarLancamento(id) {
+        console.log(`Lançamento ${id} cancelado.`);
+      }
+    });
+  </script>
+</body>
+
 </html>

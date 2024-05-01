@@ -1,37 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PFC - Cadastro de Usuários</title>
-    <link rel="stylesheet" href="./css/global.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h1>Cadastro de Usuários</h1>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Usuário</th>
-            <th>Senha</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <div class="btn-group">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-toggle="modal"
-          data-target="#newUserModal"
-        >
-          Novo Usuário
-        </button>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usuários</title>
+  <link rel="stylesheet" href="/css/global.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Cadastro de Usuários</h1>
+    <nav>
+      <ul>
+        <li><a href="/categorias">Categorias</a></li>
+        <li><a href="/cadastro-conta">Contas</a></li>
+        <li><a href="/cadastro-usuario">Usuários</a></li>
+        <li><a href="/receitas-despesas">Receitas e Despesas</a></li>
+        <li><a href="/lancamentos">Lançamentos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <form id="usuarioForm">
+      <div class="form-group">
+        <label for="id">ID:</label>
+        <input placeholder="Digite um ID existente para alterar o usuário" type="text" id="id" name="id" required
+          disabled />
+        <button id="btnEditar">Editar existente</button>
       </div>
-    </div>
-    <script async></script>
-  </body>
+      <div class="form-group">
+        <label for="name">Nome:</label>
+        <input placeholder="Digite o nome do usuário" type="text" id="name" name="name" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input placeholder="Digite o email do usuário" type="email" id="email" name="email" required />
+      </div>
+      <div class="form-group">
+        <label for="user">Usuário:</label>
+        <input placeholder="Digite o nome de usuário" type="text" id="user" name="user" required />
+      </div>
+      <div class="form-group">
+        <label for="pwd">Senha:</label>
+        <input placeholder="Digite a senha" type="password" id="pwd" name="pwd" required />
+      </div>
+      <div class="form-group">
+        <label for="level">Nível de Acesso:</label>
+        <select id="level" name="level">
+          <option value="normal">Normal</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+          <option value="on">Ativo</option>
+          <option value="off">Inativo</option>
+        </select>
+      </div>
+      <div class="form-group" style="overflow-x: auto;">
+        <table id="tabelaUsuarios">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Usuário</th>
+              <th>Nível de Acesso</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button type="submit">Salvar</button>
+    </form>
+  </main>
+
+  <script async type="module">
+    import gerarUUID from "/js/gerarUUID.js";
+    import baseApi from "/js/baseApi.js";
+
+    window.addEventListener("load", () => {
+      const form = document.querySelector("form");
+      const btnEditar = document.getElementById("btnEditar");
+      const inputId = document.getElementById("id");
+
+      buscarUsuarios();
+
+      btnEditar.addEventListener("click", (event) => {
+        if (inputId.disabled) {
+          inputId.disabled = false;
+          btnEditar.textContent = "Cancelar Edição";
+        } else {
+          inputId.disabled = true;
+          inputId.value = "";
+          btnEditar.textContent = "Editar existente";
+        }
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const id = formData.get("id");
+
+        const payload = {
+          id: id,
+          name: formData.get("name"),
+          email: formData.get("email"),
+          user: formData.get("user"),
+          pwd: formData.get("pwd"),
+          level: formData.get("level"),
+          status: formData.get("status"),
+        };
+
+        if (id && id.trim() !== "") {
+          atualizarUsuario(id, payload);
+        } else {
+          payload.id = gerarUUID();
+          salvarUsuario(payload);
+        }
+
+        id = "";
+        inputId.value = "";
+        btnEditar.textContent = "Editar existente";
+        inputId.disabled = true;
+        form.reset();
+      });
+
+      function buscarUsuarios() {
+        baseApi("/api/usuarios")
+          .then((response) => response.json())
+          .then((data) => {
+            tabelaUsuarios.querySelector("tbody").innerHTML = "";
+            data.forEach((usuario) => {
+              const linha = document.createElement("tr");
+              linha.innerHTML = `
+                  <td>${usuario.id}</td>
+                  <td>${usuario.name}</td>
+                  <td>${usuario.email}</td>
+                  <td>${usuario.user}</td>
+                  <td>${usuario.level}</td>
+                  <td>${usuario.status ? usuario.status.toLowerCase() === "on" ? "Ativo" : "Inativo" : "Inativo"}</td>
+                `;
+              tabelaUsuarios.querySelector("tbody").appendChild(linha);
+            });
+          })
+          .catch((error) => console.error("Erro ao buscar usuários:", error));
+      }
+
+      function atualizarUsuario(id, usuario) {
+        baseApi(`/api/usuario/${id}`, "PUT", usuario)
+          .then(() => {
+            buscarUsuarios();
+          })
+          .catch((error) => console.error("Erro ao atualizar usuário:", error));
+      }
+
+      function salvarUsuario(usuario) {
+        baseApi("/api/usuario", "POST", usuario)
+          .then(() => {
+            buscarUsuarios();
+          })
+          .catch((error) => console.error("Erro ao salvar usuário:", error));
+      }
+    });
+  </script>
+</body>
+
 </html>

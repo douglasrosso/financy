@@ -4,50 +4,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cadastro de Receitas e Despesas</title>
-  <link rel="stylesheet" href="./css/global.css" />
+  <title>Receitas e Despesas</title>
+  <link rel="stylesheet" href="/css/global.css" />
 </head>
 
 <body>
   <header>
     <h1>Cadastro de Receitas e Despesas</h1>
+    <nav>
+      <ul>
+        <li><a href="/categorias">Categorias</a></li>
+        <li><a href="/cadastro-conta">Contas</a></li>
+        <li><a href="/cadastro-usuario">Usuários</a></li>
+        <li><a href="/receitas-despesas">Receitas e Despesas</a></li>
+        <li><a href="/lancamentos">Lançamentos</a></li>
+      </ul>
+    </nav>
   </header>
 
   <main>
     <form>
       <div class="form-group">
         <label for="id">ID:</label>
-        <input placeholder="Digite um ID existente para alterar a conta" type="text" id="id" name="id" required
-          disabled />
+        <input placeholder="Digite um ID existente para alterar a receita / despesa" type="text" id="id" name="id"
+          required disabled value="<%= receitasDespesas.id %>" />
         <button id="btnEditar">Editar existente</button>
       </div>
       <div class="form-group">
         <label for="tipo">Tipo:</label>
         <select id="tipo" name="tipo" required>
-          <option value="Receita">Receita</option>
-          <option value="Despesa">Despesa</option>
+          <option value="Receita" <%=receitasDespesas.type==="Receita" ? "selected" : "" %>>Receita</option>
+          <option value="Despesa" <%=receitasDespesas.type==="Despesa" ? "selected" : "" %>>Despesa</option>
         </select>
       </div>
       <div class="form-group">
         <label for="categorias">Categoria:</label>
         <select id="categorias" name="categorias" required>
+          <% if (receitasDespesas && receitasDespesas.categories) { %>
+            <option value="<%= receitasDespesas.categories  %>" selected>
+              <%= receitasDespesas.categories %>
+            </option>
+            <% } %>
         </select>
       </div>
       <div class="form-group">
         <label for="descricao">Descrição:</label>
-        <input type="text" id="descricao" name="descricao" required />
+        <input type="text" id="descricao" name="descricao" required value="<%= receitasDespesas.description %>" />
       </div>
       <div class="form-group">
         <label for="valor">Valor:</label>
-        <input type="text" id="valor" name="valor" required />
+        <input type="text" id="valor" name="valor" required value="<%= receitasDespesas.value %>" />
       </div>
       <div class="form-group">
         <label for="dataVencimento">Data de Vencimento:</label>
-        <input type="date" id="dataVencimento" name="dataVencimento" required />
+        <input type="date" id="dataVencimento" name="dataVencimento" required
+          value="<%= receitasDespesas.due_date %>" />
       </div>
       <div class="form-group">
         <label for="dataPagamento">Data de Pagamento:</label>
-        <input type="date" id="dataPagamento" name="dataPagamento" />
+        <input type="date" id="dataPagamento" name="dataPagamento" value="<%= receitasDespesas.payment_date %>" />
       </div>
       <div class="form-group">
         <label for="conta">Conta:</label>
@@ -56,18 +71,18 @@
       </div>
       <div class="form-group">
         <label for="status">Status:</label>
-        <select id="status" name="status" required>
-          <option value="Lancada">Lançada</option>
-          <option value="Confirmada">Confirmada</option>
-          <option value="Paga">Paga</option>
-          <option value="Cancelada">Cancelada</option>
+        <select id="status" name="status" required value="<%= receitasDespesas.status %>">
+          <option value="Lançada" <%=receitasDespesas.status==="Lançada" ? "selected" : "" %>>Lançada</option>
+          <option value="Confirmada" <%=receitasDespesas.status==="Confirmada" ? "selected" : "" %>>Confirmada</option>
+          <option value="Paga" <%=receitasDespesas.status==="Paga" ? "selected" : "" %>>Paga</option>
+          <option value="Cancelada" <%=receitasDespesas.status==="Cancelada" ? "selected" : "" %>>Cancelada</option>
         </select>
       </div>
       <div class="form-group">
-        <label for="ativo">Ativa:</label>
+        <label for="comentario">Comentário:</label>
         <div style="display: flex; align-items: center;">
-          <input type="checkbox" id="ativo" name="ativo" style="margin: 0 5px 5px; height: 20px; width: 20px;"></input>
-          <label for="ativo" style="font-weight: 400;">Clique para marcar...</label>
+          <textarea draggable="false" style="resize: none; height: 100px; padding: 10px;" id="comentario"
+            name="comentario"><%= receitasDespesas.comments %></textarea>
         </div>
       </div>
       <div class="form-group" style="overflow-x: auto;">
@@ -83,7 +98,7 @@
               <th>Data da pagamento</th>
               <th>Conta</th>
               <th>Status</th>
-              <th>Ativa</th>
+              <th>Comentário</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -93,8 +108,8 @@
     </form>
   </main>
   <script async type="module">
-    import gerarUUID from "./js/gerarUUID.js";
-    import baseApi from "./js/baseApi.js";
+    import gerarUUID from "/js/gerarUUID.js";
+    import baseApi from "/js/baseApi.js";
 
     window.addEventListener("load", () => {
       const form = document.querySelector("form");
@@ -120,7 +135,6 @@
         event.preventDefault();
         const categoriaSelecionada = document.getElementById("categorias");
         const contaSelecionada = document.getElementById("conta");
-        const checkboxAtivo = document.getElementById("ativo");
         const formData = new FormData(form);
         const id = formData.get("id");
 
@@ -134,7 +148,7 @@
           payment_date: formData.get("dataPagamento"),
           account: contaSelecionada.options[contaSelecionada.selectedIndex].textContent,
           status: formData.get("status"),
-          comments: checkboxAtivo.checked ? "on" : "off",
+          comments: formData.get("comentario") ?? " ",
         };
 
         if (id && id.trim() !== "") {
@@ -179,6 +193,9 @@
               option.value = conta.id;
               option.textContent = conta.description;
               selectContas.appendChild(option);
+              if (receitasDespesas && receitasDespesas.account && receitasDespesas.account === conta.id) {
+                option.selected = true;
+              }
             });
           })
           .catch((error) =>
@@ -204,7 +221,7 @@
                             <td>${receitaDespesa.payment_date}</td>
                             <td>${receitaDespesa.account}</td>
                             <td>${receitaDespesa.status}</td>
-                            <td>${receitaDespesa.comments ? receitaDespesa.comments.toLowerCase() == "on" ? "Sim" : "Não" : "Não"}</td>
+                            <td>${receitaDespesa.comments}</td>
                         `;
               tabelaReceitasDespesas.appendChild(linha);
             });

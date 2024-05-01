@@ -1,6 +1,7 @@
 import apiAuthMiddleware from "../middlewares/apiAuthMiddleware.js";
 import jwt from "jsonwebtoken";
 import fs from "fs";
+import searchReleaseMiddleware from "../middlewares/searchReleaseMiddleware.js";
 const secretKey = "financy";
 
 function useApiRoutes(router) {
@@ -196,6 +197,61 @@ function useApiRoutes(router) {
     } else {
       res.sendStatus(404);
     }
+  });
+
+  router.get("/api/usuarios", apiAuthMiddleware, (req, res) => {
+    const usuariosData = JSON.parse(
+      fs.readFileSync("./data/users.json", "utf-8")
+    );
+    res.json(usuariosData);
+  });
+
+  router.post("/api/usuario", apiAuthMiddleware, (req, res) => {
+    const novoUsuario = req.body;
+
+    const usuariosData = JSON.parse(
+      fs.readFileSync("./data/users.json", "utf-8")
+    );
+
+    usuariosData.push(novoUsuario);
+
+    fs.writeFileSync(
+      "./data/users.json",
+      JSON.stringify(usuariosData, null, 2)
+    );
+
+    res.sendStatus(200);
+  });
+
+  router.put("/api/usuario/:id", apiAuthMiddleware, (req, res) => {
+    const { id } = req.params;
+    const { name, email, user, pwd, level, status } = req.body;
+
+    let usuariosData = JSON.parse(
+      fs.readFileSync("./data/users.json", "utf-8")
+    );
+
+    const index = usuariosData.findIndex((usuario) => usuario.id === id);
+    if (index !== -1) {
+      usuariosData[index].name = name;
+      usuariosData[index].email = email;
+      usuariosData[index].user = user;
+      usuariosData[index].pwd = pwd;
+      usuariosData[index].level = level;
+      usuariosData[index].status = status;
+      fs.writeFileSync(
+        "./data/users.json",
+        JSON.stringify(usuariosData, null, 2)
+      );
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(404);
+    }
+  });
+
+  router.get("/api/lancamentos", searchReleaseMiddleware, (req, res) => {
+    const { lancamentoDoDia, lancamentosEmAtraso } = res.locals;
+    res.json({ lancamentoDoDia, lancamentosEmAtraso });
   });
 }
 
