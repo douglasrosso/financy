@@ -10,22 +10,25 @@
 
 <body>
   <header>
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <h1>Financy</h1>
+      <li> <a href="/sair">Sair</a></li>
+    </div>
     <h1>Lançamentos</h1>
     <nav>
       <ul>
+        <li><a href="/home">Início</a></li>
         <li><a href="/categorias">Categorias</a></li>
         <li><a href="/cadastro-conta">Contas</a></li>
         <li><a href="/cadastro-usuario">Usuários</a></li>
         <li><a href="/lancamentos">Lançamentos</a></li>
       </ul>
     </nav>
-    <li style="display: flex; align-items: center; justify-content: end;"> <a href="/sair">Sair</a></li>
-    <li style="display: flex; align-items: center; justify-content: end;"> <a href="/sair">Sair</a></li>
   </header>
 
   <main>
-    <form>
-      <% if (receitasDespesas.id || novoLancamento) { %>
+    <% if (receitasDespesas.id || novoLancamento) { %>
+      <form>
         <% if (!novoLancamento) { %>
           <div class="form-group">
             <label for="id">ID:</label>
@@ -95,32 +98,30 @@
                   name="comentario"><%= receitasDespesas.comments %></textarea>
               </div>
             </div>
-            <button type="submit">Salvar</button>
-            <% } else { %>
-              <button id="novo">Novo lançamento</button>
-              <div class="form-group" style="overflow-x: auto;">
-                <table id="tabelaReceitasDespesas">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Tipo</th>
-                      <th>Categorias</th>
-                      <th>Descrição</th>
-                      <th>Valor</th>
-                      <th>Data de vencimento</th>
-                      <th>Data da pagamento</th>
-                      <th>Conta</th>
-                      <th>Status</th>
-                      <th>Comentário</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
-              <%}%>
-
-
-    </form>
+            <button id="salvarLancamento">Salvar</button>
+      </form>
+      <% } else { %>
+        <button id="novo">Novo lançamento</button>
+        <div class="form-group" style="overflow-x: auto;">
+          <table id="tabelaReceitasDespesas">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Categorias</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Data de vencimento</th>
+                <th>Data da pagamento</th>
+                <th>Conta</th>
+                <th>Status</th>
+                <th>Comentário</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <%}%>
   </main>
   <script async type="module">
     import gerarUUID from "/js/gerarUUID.js";
@@ -130,23 +131,27 @@
       const form = document.querySelector("form");
       const inputId = document.getElementById("id");
       const novoLancamento = document.getElementById("novo");
+      const salvarLancamento = document.getElementById("salvarLancamento");
 
       buscarCategorias();
       buscarContas();
       buscarReceitasDespesas();
 
-      novoLancamento.addEventListener("click", (event) => {
-        window.location.href = "/lancamentos/novo";
-      });
+      if (window.location.pathname === "/lancamentos")
+        novoLancamento.addEventListener("click", (event) => {
+          window.location.href = "/lancamentos/novo";
+        });
 
-      form.addEventListener("submit", (event) => {
+      salvarLancamento.addEventListener("click", (event) => {
         event.preventDefault();
         const categoriaSelecionada = document.getElementById("categorias");
         const contaSelecionada = document.getElementById("conta");
         const formData = new FormData(form);
-        limparFormatacaoHTML()
+        limparFormatacaoHTML();
+        const id = formData.get("id");
+
         const payload = {
-          id: formData.get("id"),
+          id: id,
           type: formData.get("tipo"),
           categories: categoriaSelecionada.options[categoriaSelecionada.selectedIndex].textContent,
           description: formData.get("descricao"),
@@ -157,7 +162,8 @@
           status: formData.get("status"),
           comments: formData.get("comentario") ?? " ",
         };
-        if (id && id.trim() !== "") {
+
+        if (window.location.pathname !== "/lancamentos/novo" && id && id.trim() !== "") {
           atualizarReceitaDespesa(id, payload);
           window.location.href = "/lancamentos";
         } else {
@@ -266,6 +272,7 @@
         baseApi(`/api/lancamentos/${id}`, "PUT", receitaDespesa)
           .then(() => {
             buscarReceitasDespesas();
+            alert("Salvo com sucesso!")
           })
           .catch((error) =>
             console.error("Erro ao atualizar receita ou despesa:", error)
@@ -276,6 +283,7 @@
         baseApi("/api/lancamentos", "POST", receitaDespesa)
           .then(() => {
             buscarReceitasDespesas();
+            alert("Salvo com sucesso!")
           })
           .catch((error) =>
             console.error("Erro ao salvar receita ou despesa:", error)

@@ -10,16 +10,20 @@
 
 <body>
   <header>
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <h1>Financy</h1>
+      <li> <a href="/sair">Sair</a></li>
+    </div>
     <h1>Cadastro de Contas</h1>
     <nav>
       <ul>
+        <li><a href="/home">Início</a></li>
         <li><a href="/categorias">Categorias</a></li>
         <li><a href="/cadastro-conta">Contas</a></li>
         <li><a href="/cadastro-usuario">Usuários</a></li>
         <li><a href="/lancamentos">Lançamentos</a></li>
       </ul>
     </nav>
-    <li style="display: flex; align-items: center; justify-content: end;"> <a href="/sair">Sair</a></li>
   </header>
 
 
@@ -39,20 +43,20 @@
         <label for="dados">Saldo:</label>
         <input placeholder="Digite o dados da conta" type="text" id="dados" name="dados" required />
       </div>
-      <div class="form-group">
-        <table id="tabelaContas">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Descrição</th>
-              <th>Dados</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
       <button type="submit">Salvar</button>
     </form>
+    <div class="form-group">
+      <table id="tabelaContas">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Descrição</th>
+            <th>Dados</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </main>
 
   <script async type="module">
@@ -124,6 +128,7 @@
         baseApi(`/api/contas/${id}`, "PUT", conta)
           .then(() => {
             buscarContas();
+            alert("Salvo com sucesso!")
           })
           .catch((error) => console.error("Erro ao atualizar conta:", error));
       }
@@ -132,6 +137,7 @@
         baseApi("/api/contas", "POST", conta)
           .then(() => {
             buscarContas();
+            alert("Salvo com sucesso!")
           })
           .catch((error) => console.error("Erro ao salvar conta:", error));
       }

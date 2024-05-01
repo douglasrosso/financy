@@ -10,16 +10,20 @@
 
 <body>
   <header>
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <h1>Financy</h1>
+      <li> <a href="/sair">Sair</a></li>
+    </div>
     <h1>Cadastro de Categorias</h1>
     <nav>
       <ul>
+        <li><a href="/home">Início</a></li>
         <li><a href="/categorias">Categorias</a></li>
         <li><a href="/cadastro-conta">Contas</a></li>
         <li><a href="/cadastro-usuario">Usuários</a></li>
         <li><a href="/lancamentos">Lançamentos</a></li>
       </ul>
     </nav>
-    <li style="display: flex; align-items: center; justify-content: end;"> <a href="/sair">Sair</a></li>
   </header>
 
   <main>
@@ -44,20 +48,20 @@
           </select>
         </div>
       </div>
-      <div class="form-group">
-        <table id="tabelaCategorias">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Descrição</th>
-              <th>Tipo</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
       <button type="submit">Salvar</button>
     </form>
+    <div class="form-group">
+      <table id="tabelaCategorias">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Descrição</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </main>
   <script async type="module">
     import gerarUUID from "/js/gerarUUID.js";
@@ -130,6 +134,7 @@
         baseApi(`/api/categorias/${id}`, "PUT", categoria)
           .then(() => {
             buscarCategorias();
+            alert("Salvo com sucesso!")
           })
           .catch((error) =>
             console.error("Erro ao atualizar categoria:", error)
@@ -140,6 +145,7 @@
         baseApi("/api/categorias", "POST", categoria)
           .then(() => {
             buscarCategorias();
+            alert("Salvo com sucesso!")
           })
           .catch((error) =>
             console.error("Erro ao salvar categoria:", error)
