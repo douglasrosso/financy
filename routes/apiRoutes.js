@@ -136,14 +136,14 @@ function useApiRoutes(router) {
     }
   });
 
-  router.get("/api/receitas-despesas", apiAuthMiddleware, (req, res) => {
+  router.get("/api/lancamentos", apiAuthMiddleware, (req, res) => {
     const entriesData = JSON.parse(
       fs.readFileSync("./data/entries.json", "utf-8")
     );
     res.json(entriesData);
   });
 
-  router.post("/api/receitas-despesas", apiAuthMiddleware, (req, res) => {
+  router.post("/api/lancamentos", apiAuthMiddleware, (req, res) => {
     const novaEntry = req.body;
 
     const entriesData = JSON.parse(
@@ -160,7 +160,7 @@ function useApiRoutes(router) {
     res.sendStatus(200);
   });
 
-  router.put("/api/receitas-despesas/:id", apiAuthMiddleware, (req, res) => {
+  router.put("/api/lancamentos/:id", apiAuthMiddleware, (req, res) => {
     const { id } = req.params;
     const {
       description,
@@ -249,10 +249,6 @@ function useApiRoutes(router) {
     }
   });
 
-  router.get("/api/lancamentos", searchReleaseMiddleware, (req, res) => {
-    const { lancamentoDoDia, lancamentosEmAtraso } = res.locals;
-    res.json({ lancamentoDoDia, lancamentosEmAtraso });
-  });
 }
 
 export default useApiRoutes;

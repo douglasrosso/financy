@@ -10,13 +10,12 @@
 
 <body>
   <header>
-    <h1>Cadastro de Receitas e Despesas</h1>
+    <h1>Lançamentos</h1>
     <nav>
       <ul>
         <li><a href="/categorias">Categorias</a></li>
         <li><a href="/cadastro-conta">Contas</a></li>
         <li><a href="/cadastro-usuario">Usuários</a></li>
-        <li><a href="/receitas-despesas">Receitas e Despesas</a></li>
         <li><a href="/lancamentos">Lançamentos</a></li>
       </ul>
     </nav>
@@ -24,87 +23,102 @@
 
   <main>
     <form>
-      <div class="form-group">
-        <label for="id">ID:</label>
-        <input placeholder="Digite um ID existente para alterar a receita / despesa" type="text" id="id" name="id"
-          required disabled value="<%= receitasDespesas.id %>" />
-        <button id="btnEditar">Editar existente</button>
-      </div>
-      <div class="form-group">
-        <label for="tipo">Tipo:</label>
-        <select id="tipo" name="tipo" required>
-          <option value="Receita" <%=receitasDespesas.type==="Receita" ? "selected" : "" %>>Receita</option>
-          <option value="Despesa" <%=receitasDespesas.type==="Despesa" ? "selected" : "" %>>Despesa</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="categorias">Categoria:</label>
-        <select id="categorias" name="categorias" required>
-          <% if (receitasDespesas && receitasDespesas.categories) { %>
-            <option value="<%= receitasDespesas.categories  %>" selected>
-              <%= receitasDespesas.categories %>
-            </option>
-            <% } %>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="descricao">Descrição:</label>
-        <input type="text" id="descricao" name="descricao" required value="<%= receitasDespesas.description %>" />
-      </div>
-      <div class="form-group">
-        <label for="valor">Valor:</label>
-        <input type="text" id="valor" name="valor" required value="<%= receitasDespesas.value %>" />
-      </div>
-      <div class="form-group">
-        <label for="dataVencimento">Data de Vencimento:</label>
-        <input type="date" id="dataVencimento" name="dataVencimento" required
-          value="<%= receitasDespesas.due_date %>" />
-      </div>
-      <div class="form-group">
-        <label for="dataPagamento">Data de Pagamento:</label>
-        <input type="date" id="dataPagamento" name="dataPagamento" value="<%= receitasDespesas.payment_date %>" />
-      </div>
-      <div class="form-group">
-        <label for="conta">Conta:</label>
-        <select id="conta" name="conta" required>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="status">Status:</label>
-        <select id="status" name="status" required value="<%= receitasDespesas.status %>">
-          <option value="Lançada" <%=receitasDespesas.status==="Lançada" ? "selected" : "" %>>Lançada</option>
-          <option value="Confirmada" <%=receitasDespesas.status==="Confirmada" ? "selected" : "" %>>Confirmada</option>
-          <option value="Paga" <%=receitasDespesas.status==="Paga" ? "selected" : "" %>>Paga</option>
-          <option value="Cancelada" <%=receitasDespesas.status==="Cancelada" ? "selected" : "" %>>Cancelada</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="comentario">Comentário:</label>
-        <div style="display: flex; align-items: center;">
-          <textarea draggable="false" style="resize: none; height: 100px; padding: 10px;" id="comentario"
-            name="comentario"><%= receitasDespesas.comments %></textarea>
+      <% if (receitasDespesas.id) { %>
+        <div class="form-group">
+          <label for="id">ID:</label>
+          <input placeholder="Digite um ID existente para alterar a receita / despesa" type="text" id="id" name="id"
+            required disabled value="<%= receitasDespesas.id %>" />
+          <!-- <button id="btnEditar" style="<%= receitasDespesas.id ? 'display: none;' : '' %>">Editar existente</button> -->
         </div>
-      </div>
-      <div class="form-group" style="overflow-x: auto;">
-        <table id="tabelaReceitasDespesas">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tipo</th>
-              <th>Categorias</th>
-              <th>Descrição</th>
-              <th>Valor</th>
-              <th>Data de vencimento</th>
-              <th>Data da pagamento</th>
-              <th>Conta</th>
-              <th>Status</th>
-              <th>Comentário</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <button type="submit">Salvar</button>
+        <div class="form-group">
+          <label for="tipo">Tipo:</label>
+          <select id="tipo" name="tipo" required <%=receitasDespesas.type ? "disabled" : "" %>>
+            <option value="Receita" <%=receitasDespesas.type==="Receita" ? "selected" : "" %>>Receita</option>
+            <option value="Despesa" <%=receitasDespesas.type==="Despesa" ? "selected" : "" %>>Despesa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="categorias">Categoria:</label>
+          <select id="categorias" name="categorias" required <%=receitasDespesas.categories ? "disabled" : "" %>>
+            <% if (receitasDespesas && receitasDespesas.categories) { %>
+              <option value="<%= receitasDespesas.categories  %>" selected>
+                <%= receitasDespesas.categories %>
+              </option>
+              <% } %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="descricao">Descrição:</label>
+          <input type="text" id="descricao" name="descricao" required value="<%= receitasDespesas.description %>"
+            <%=receitasDespesas.description ? "disabled" : "" %> />
+        </div>
+        <div class="form-group">
+          <label for="valor">Valor:</label>
+          <input type="text" id="valor" name="valor" required value="<%= receitasDespesas.value %>"
+            <%=receitasDespesas.value ? "disabled" : "" %>/>
+        </div>
+        <div class="form-group">
+          <label for="dataVencimento">Data de Vencimento:</label>
+          <input type="date" id="dataVencimento" name="dataVencimento" required value="<%= receitasDespesas.due_date %>"
+            <%=receitasDespesas.due_date ? "disabled" : "" %> />
+        </div>
+        <div class="form-group">
+          <label for="dataPagamento">Data de Pagamento:</label>
+          <input type="date" id="dataPagamento" name="dataPagamento" value="<%= receitasDespesas.payment_date %>"
+            <%=receitasDespesas.payment_date ? "disabled" : "" %> />
+        </div>
+        <div class="form-group">
+          <label for="conta">Conta:</label>
+          <select id="conta" name="conta" required <%=receitasDespesas.account ? "disabled" : "" %>>
+            <% if (receitasDespesas && receitasDespesas.account) { %>
+              <option value="<%= receitasDespesas.account  %>" selected>
+                <%= receitasDespesas.account %>
+              </option>
+              <% } %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="status">Status:</label>
+          <select id="status" name="status" required value="<%= receitasDespesas.status %>">
+            <option value="Lançada" <%=receitasDespesas.status==="Lançada" ? "selected" : "" %>>Lançada</option>
+            <option value="Confirmada" <%=receitasDespesas.status==="Confirmada" ? "selected" : "" %>>Confirmada
+            </option>
+            <option value="Paga" <%=receitasDespesas.status==="Paga" ? "selected" : "" %>>Paga</option>
+            <option value="Cancelada" <%=receitasDespesas.status==="Cancelada" ? "selected" : "" %>>Cancelada</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="comentario">Comentário:</label>
+          <div style="display: flex; align-items: center;">
+            <textarea draggable="false" style="resize: none; height: 100px; padding: 10px;" id="comentario"
+              name="comentario"><%= receitasDespesas.comments %></textarea>
+          </div>
+        </div>
+
+        <button type="submit">Salvar</button>
+        <% } else { %>
+          <div class="form-group" style="overflow-x: auto;">
+            <table id="tabelaReceitasDespesas">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tipo</th>
+                  <th>Categorias</th>
+                  <th>Descrição</th>
+                  <th>Valor</th>
+                  <th>Data de vencimento</th>
+                  <th>Data da pagamento</th>
+                  <th>Conta</th>
+                  <th>Status</th>
+                  <th>Comentário</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <%}%>
+
+
     </form>
   </main>
   <script async type="module">
@@ -113,23 +127,23 @@
 
     window.addEventListener("load", () => {
       const form = document.querySelector("form");
-      const btnEditar = document.getElementById("btnEditar");
+      // const btnEditar = document.getElementById("btnEditar");
       const inputId = document.getElementById("id");
 
       buscarCategorias();
       buscarContas();
       buscarReceitasDespesas();
 
-      btnEditar.addEventListener("click", (event) => {
-        if (inputId.disabled) {
-          inputId.disabled = false;
-          btnEditar.textContent = "Cancelar Edição";
-        } else {
-          inputId.disabled = true;
-          inputId.value = "";
-          btnEditar.textContent = "Editar existente";
-        }
-      });
+      // btnEditar.addEventListener("click", (event) => {
+      //   if (inputId.disabled) {
+      //     inputId.disabled = false;
+      //     btnEditar.textContent = "Cancelar Edição";
+      //   } else {
+      //     inputId.disabled = true;
+      //     inputId.value = "";
+      //     btnEditar.textContent = "Editar existente";
+      //   }
+      // });
 
       form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -158,13 +172,13 @@
           salvarReceitaDespesa(payload);
         }
 
-        id = "";
-        inputId.value = "";
-        btnEditar.textContent = "Editar existente";
-        inputId.disabled = true;
+        // id = "";
+        // inputId.value = "";
+        // btnEditar.textContent = "Editar existente";
+        // inputId.disabled = true;
         form.reset();
       });
-
+      8
       function buscarCategorias() {
         baseApi("/api/categorias")
           .then((response) => response.json())
@@ -187,15 +201,16 @@
           .then((response) => response.json())
           .then((data) => {
             const selectContas = document.getElementById("conta");
-            selectContas.innerHTML = "";
+            if (!selectContas) {
+              console.error("Elemento select não encontrado.");
+              return;
+            }
+
             data.forEach((conta) => {
               const option = document.createElement("option");
               option.value = conta.id;
               option.textContent = conta.description;
               selectContas.appendChild(option);
-              if (receitasDespesas && receitasDespesas.account && receitasDespesas.account === conta.id) {
-                option.selected = true;
-              }
             });
           })
           .catch((error) =>
@@ -203,8 +218,9 @@
           );
       }
 
+
       function buscarReceitasDespesas() {
-        baseApi("/api/receitas-despesas")
+        baseApi("/api/lancamentos")
           .then((response) => response.json())
           .then((data) => {
             const tabelaReceitasDespesas = document.getElementById("tabelaReceitasDespesas").querySelector("tbody");
@@ -232,7 +248,7 @@
       }
 
       function atualizarReceitaDespesa(id, receitaDespesa) {
-        baseApi(`/api/receitas-despesas/${id}`, "PUT", receitaDespesa)
+        baseApi(`/api/lancamentos/${id}`, "PUT", receitaDespesa)
           .then(() => {
             buscarReceitasDespesas();
           })
@@ -242,7 +258,7 @@
       }
 
       function salvarReceitaDespesa(receitaDespesa) {
-        baseApi("/api/receitas-despesas", "POST", receitaDespesa)
+        baseApi("/api/lancamentos", "POST", receitaDespesa)
           .then(() => {
             buscarReceitasDespesas();
           })

@@ -11,11 +11,11 @@ function useClientRoutes(router) {
     res.render("admin");
   });
 
-  router.get("/receitas-despesas", authMiddleware, (_, res) => {
+  router.get("/lancamentos", authMiddleware, (_, res) => {
     res.render("cadReceitasDespesas", { receitasDespesas: {} });
   });
 
-  router.get("/receitas-despesas/:id", authMiddleware, (req, res) => {
+  router.get("/lancamentos/:id", authMiddleware, (req, res) => {
     const lancamentosData = JSON.parse(
       fs.readFileSync("./data/entries.json", "utf-8")
     );
@@ -37,10 +37,6 @@ function useClientRoutes(router) {
 
   router.get("/cadastro-usuario", authMiddleware, (_, res) => {
     res.render("cadUsuarios");
-  });
-
-  router.get("/lancamentos", authMiddleware, (_, res) => {
-    res.render("lancamentos");
   });
 }
 
