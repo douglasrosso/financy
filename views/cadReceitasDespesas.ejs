@@ -19,100 +19,105 @@
         <li><a href="/lancamentos">Lançamentos</a></li>
       </ul>
     </nav>
+    <li style="display: flex; align-items: center; justify-content: end;"> <a href="/sair">Sair</a></li>
+    <li style="display: flex; align-items: center; justify-content: end;"> <a href="/sair">Sair</a></li>
   </header>
 
   <main>
     <form>
-      <% if (receitasDespesas.id) { %>
-        <div class="form-group">
-          <label for="id">ID:</label>
-          <input placeholder="Digite um ID existente para alterar a receita / despesa" type="text" id="id" name="id"
-            required value="<%= receitasDespesas.id %>" />
-        </div>
-        <div class="form-group">
-          <label for="tipo">Tipo:</label>
-          <select id="tipo" name="tipo" required>
-            <option value="Receita" <%=receitasDespesas.type==="Receita" ? "selected" : "" %>>Receita</option>
-            <option value="Despesa" <%=receitasDespesas.type==="Despesa" ? "selected" : "" %>>Despesa</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="categorias">Categoria:</label>
-          <select id="categorias" name="categorias" required>
-            <% if (receitasDespesas && receitasDespesas.categories) { %>
-              <option value="<%= receitasDespesas.categories  %>" selected>
-                <%= receitasDespesas.categories %>
-              </option>
-              <% } %>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="descricao">Descrição:</label>
-          <input type="text" id="descricao" name="descricao" required value="<%= receitasDespesas.description %>" />
-        </div>
-        <div class="form-group">
-          <label for="valor">Valor:</label>
-          <input type="text" id="valor" name="valor" required value="<%= receitasDespesas.value %>" />
-        </div>
-        <div class="form-group">
-          <label for="dataVencimento">Data de Vencimento:</label>
-          <input type="date" id="dataVencimento" name="dataVencimento" required
-            value="<%= receitasDespesas.due_date %>" />
-        </div>
-        <div class="form-group">
-          <label for="dataPagamento">Data de Pagamento:</label>
-          <input type="date" id="dataPagamento" name="dataPagamento" value="<%= receitasDespesas.payment_date %>" />
-        </div>
-        <div class="form-group">
-          <label for="conta">Conta:</label>
-          <select id="conta" name="conta" required>
-            <% if (receitasDespesas && receitasDespesas.account) { %>
-              <option value="<%= receitasDespesas.account  %>" selected>
-                <%= receitasDespesas.account %>
-              </option>
-              <% } %>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="status">Status:</label>
-          <select id="status" name="status" required value="<%= receitasDespesas.status %>">
-            <option value="Lançada" <%=receitasDespesas.status==="Lançada" ? "selected" : "" %>>Lançada</option>
-            <option value="Confirmada" <%=receitasDespesas.status==="Confirmada" ? "selected" : "" %>>Confirmada
-            </option>
-            <option value="Paga" <%=receitasDespesas.status==="Paga" ? "selected" : "" %>>Paga</option>
-            <option value="Cancelada" <%=receitasDespesas.status==="Cancelada" ? "selected" : "" %>>Cancelada</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="comentario">Comentário:</label>
-          <div style="display: flex; align-items: center;">
-            <textarea draggable="false" style="resize: none; height: 100px; padding: 10px;" id="comentario"
-              name="comentario"><%= receitasDespesas.comments %></textarea>
+      <% if (receitasDespesas.id || novoLancamento) { %>
+        <% if (!novoLancamento) { %>
+          <div class="form-group">
+            <label for="id">ID:</label>
+            <input placeholder="Digite um ID existente para alterar a receita / despesa" type="text" id="id" name="id"
+              required value="<%= receitasDespesas.id %>" />
           </div>
-        </div>
-        <button type="submit">Salvar</button>
-        <% } else { %>
-          <button id="novo">Novo lançamento</button>
-          <div class="form-group" style="overflow-x: auto;">
-            <table id="tabelaReceitasDespesas">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Tipo</th>
-                  <th>Categorias</th>
-                  <th>Descrição</th>
-                  <th>Valor</th>
-                  <th>Data de vencimento</th>
-                  <th>Data da pagamento</th>
-                  <th>Conta</th>
-                  <th>Status</th>
-                  <th>Comentário</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <%}%>
+          <% } %>
+            <div class="form-group">
+              <label for="tipo">Tipo:</label>
+              <select id="tipo" name="tipo" required>
+                <option value="Receita" <%=receitasDespesas.type==="Receita" ? "selected" : "" %>>Receita</option>
+                <option value="Despesa" <%=receitasDespesas.type==="Despesa" ? "selected" : "" %>>Despesa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="categorias">Categoria:</label>
+              <select id="categorias" name="categorias" required>
+                <% if (receitasDespesas && receitasDespesas.categories) { %>
+                  <option value="<%= receitasDespesas.categories  %>" selected>
+                    <%= receitasDespesas.categories %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="descricao">Descrição:</label>
+              <input type="text" id="descricao" name="descricao" required value="<%= receitasDespesas.description %>" />
+            </div>
+            <div class="form-group">
+              <label for="valor">Valor:</label>
+              <input type="text" id="valor" name="valor" required value="<%= receitasDespesas.value %>" />
+            </div>
+            <div class="form-group">
+              <label for="dataVencimento">Data de Vencimento:</label>
+              <input type="date" id="dataVencimento" name="dataVencimento" required
+                value="<%= receitasDespesas.due_date %>" />
+            </div>
+            <div class="form-group">
+              <label for="dataPagamento">Data de Pagamento:</label>
+              <input type="date" id="dataPagamento" name="dataPagamento" value="<%= receitasDespesas.payment_date %>" />
+            </div>
+            <div class="form-group">
+              <label for="conta">Conta:</label>
+              <select id="conta" name="conta" required>
+                <% if (receitasDespesas && receitasDespesas.account) { %>
+                  <option value="<%= receitasDespesas.account  %>" selected>
+                    <%= receitasDespesas.account %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select id="status" name="status" required value="<%= receitasDespesas.status %>">
+                <option value="Lançada" <%=receitasDespesas.status==="Lançada" ? "selected" : "" %>>Lançada</option>
+                <option value="Confirmada" <%=receitasDespesas.status==="Confirmada" ? "selected" : "" %>>Confirmada
+                </option>
+                <option value="Paga" <%=receitasDespesas.status==="Paga" ? "selected" : "" %>>Paga</option>
+                <option value="Cancelada" <%=receitasDespesas.status==="Cancelada" ? "selected" : "" %>>Cancelada
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="comentario">Comentário:</label>
+              <div style="display: flex; align-items: center;">
+                <textarea draggable="false" style="resize: none; height: 100px; padding: 10px;" id="comentario"
+                  name="comentario"><%= receitasDespesas.comments %></textarea>
+              </div>
+            </div>
+            <button type="submit">Salvar</button>
+            <% } else { %>
+              <button id="novo">Novo lançamento</button>
+              <div class="form-group" style="overflow-x: auto;">
+                <table id="tabelaReceitasDespesas">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Tipo</th>
+                      <th>Categorias</th>
+                      <th>Descrição</th>
+                      <th>Valor</th>
+                      <th>Data de vencimento</th>
+                      <th>Data da pagamento</th>
+                      <th>Conta</th>
+                      <th>Status</th>
+                      <th>Comentário</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <%}%>
 
 
     </form>
@@ -124,10 +129,15 @@
     window.addEventListener("load", () => {
       const form = document.querySelector("form");
       const inputId = document.getElementById("id");
+      const novoLancamento = document.getElementById("novo");
 
       buscarCategorias();
       buscarContas();
       buscarReceitasDespesas();
+
+      novoLancamento.addEventListener("click", (event) => {
+        window.location.href = "/lancamentos/novo";
+      });
 
       form.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -147,7 +157,6 @@
           status: formData.get("status"),
           comments: formData.get("comentario") ?? " ",
         };
-        debugger
         if (id && id.trim() !== "") {
           atualizarReceitaDespesa(id, payload);
           window.location.href = "/lancamentos";
@@ -179,9 +188,6 @@
           });
         });
       }
-
-
-
 
 
       function buscarCategorias() {

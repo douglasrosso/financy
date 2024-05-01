@@ -60,7 +60,7 @@
             baseApi("/api/login", "POST", payload)
               .then((response) => {
                 if (response.ok) {
-                  window.location.href = "/admin";
+                  window.location.href = "/home";
                 } else {
                   mensagemDeErro.style.display = "block";
                 }

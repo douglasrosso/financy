@@ -1,5 +1,6 @@
 import initialAuthMiddleware from "../middlewares/initialAuthMiddleware.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import logoutMiddleware from "../middlewares/logoutMiddleware.js";
 import fs from "fs";
 
 function useClientRoutes(router) {
@@ -7,12 +8,20 @@ function useClientRoutes(router) {
     res.render("login");
   });
 
-  router.get("/admin", authMiddleware, (_, res) => {
-    res.render("admin");
+  router.get("/sair", logoutMiddleware, (_, res) => {
+    res.render("login");
+  });
+
+  router.get("/home", authMiddleware, (_, res) => {
+    res.render("home");
   });
 
   router.get("/lancamentos", authMiddleware, (_, res) => {
-    res.render("cadReceitasDespesas", { receitasDespesas: {} });
+    res.render("cadReceitasDespesas", { receitasDespesas: {}, novoLancamento: false });
+  });
+
+  router.get("/lancamentos/novo", authMiddleware, (_, res) => {
+    res.render("cadReceitasDespesas", { receitasDespesas: {}, novoLancamento: true });
   });
 
   router.get("/lancamentos/:id", authMiddleware, (req, res) => {
@@ -24,7 +33,7 @@ function useClientRoutes(router) {
       (lanc) => lanc.id == req.params.id
     );
 
-    res.render("cadReceitasDespesas", { receitasDespesas });
+    res.render("cadReceitasDespesas", { receitasDespesas, novoLancamento: false });
   });
 
   router.get("/categorias", authMiddleware, (_, res) => {

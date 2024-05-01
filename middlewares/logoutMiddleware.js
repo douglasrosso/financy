@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
 import mapCookies from "../cookies.js";
+
 const secretKey = "financy";
 
-const initialRouteMiddleware = (req, res, next) => {
+const logoutMiddleware = (req, res, next) => {
   const cookieString = req.headers["cookie"];
   const cookies = mapCookies(cookieString);
 
@@ -16,9 +17,10 @@ const initialRouteMiddleware = (req, res, next) => {
       next();
     } else {
       req.user = user;
-      res.redirect("/home");
+      res.cookie("auth", "", { expires: new Date(0) });
+      res.redirect("/");
     }
   });
 };
 
-export default initialRouteMiddleware;
+export default logoutMiddleware;
