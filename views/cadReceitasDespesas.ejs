@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Receitas e Despesas</title>
+  <link rel="stylesheet" href="/css/global.css" />
+</head>
+
+<body>
+  <header>
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <h1>Financy</h1>
+      <li> <a href="/sair">Sair</a></li>
+    </div>
+    <% if (novoLancamento) { %>
+      <h1>Cadastro de Receita / Despesa</h1>
+      <% } else { %>
+        <h1>Lançamentos</h1>
+        <% }%>
+          <nav>
+            <ul>
+              <li><a href="/home">Início</a></li>
+              <li><a href="/categorias">Categorias</a></li>
+              <li><a href="/cadastro-conta">Contas</a></li>
+              <li><a href="/cadastro-usuario">Usuários</a></li>
+              <li><a href="/lancamentos">Lançamentos</a></li>
+            </ul>
+          </nav>
+  </header>
+
+  <main>
+    <% if (receitasDespesas.id || novoLancamento) { %>
+      <form>
+        <% if (!novoLancamento) { %>
+          <div class="form-group">
+            <label for="id">ID:</label>
+            <input placeholder="Digite um ID existente para alterar a receita / despesa" type="text" id="id" name="id"
+              required value="<%= receitasDespesas.id %>" />
+          </div>
+          <% } %>
+            <div class="form-group">
+              <label for="tipo">Tipo:</label>
+              <select id="tipo" name="tipo" required>
+                <option value="Receita" <%=receitasDespesas.type==="Receita" ? "selected" : "" %>>Receita</option>
+                <option value="Despesa" <%=receitasDespesas.type==="Despesa" ? "selected" : "" %>>Despesa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="categorias">Categoria:</label>
+              <select id="categorias" name="categorias" required>
+                <% if (receitasDespesas && receitasDespesas.categories) { %>
+                  <option value="<%= receitasDespesas.categories  %>" selected>
+                    <%= receitasDespesas.categories %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="descricao">Descrição:</label>
+              <input type="text" id="descricao" name="descricao" required value="<%= receitasDespesas.description %>" />
+            </div>
+            <div class="form-group">
+              <label for="valor">Valor:</label>
+              <input type="text" id="valor" name="valor" required value="<%= receitasDespesas.value %>" />
+            </div>
+            <div class="form-group">
+              <label for="dataVencimento">Data de Vencimento:</label>
+              <input type="date" id="dataVencimento" name="dataVencimento" required
+                value="<%= receitasDespesas.due_date %>" />
+            </div>
+            <div class="form-group">
+              <label for="dataPagamento">Data de Pagamento:</label>
+              <input type="date" id="dataPagamento" name="dataPagamento" value="<%= receitasDespesas.payment_date %>" />
+            </div>
+            <div class="form-group">
+              <label for="conta">Conta:</label>
+              <select id="conta" name="conta" required>
+                <% if (receitasDespesas && receitasDespesas.account) { %>
+                  <option value="<%= receitasDespesas.account  %>" selected>
+                    <%= receitasDespesas.account %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select id="status" name="status" required value="<%= receitasDespesas.status %>">
+                <option value="Lançada" <%=receitasDespesas.status==="Lançada" ? "selected" : "" %>>Lançada</option>
+                <option value="Confirmada" <%=receitasDespesas.status==="Confirmada" ? "selected" : "" %>>Confirmada
+                </option>
+                <option value="Paga" <%=receitasDespesas.status==="Paga" ? "selected" : "" %>>Paga</option>
+                <option value="Cancelada" <%=receitasDespesas.status==="Cancelada" ? "selected" : "" %>>Cancelada
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="comentario">Comentário:</label>
+              <div style="display: flex; align-items: center;">
+                <textarea draggable="false" style="resize: none; height: 100px; padding: 10px;" id="comentario"
+                  name="comentario"><%= receitasDespesas.comments %></textarea>
+              </div>
+            </div>
+            <button id="salvarLancamento">Salvar</button>
+      </form>
+      <% } else { %>
+        <button id="novo">Novo lançamento</button>
+        <label style="margin-top: 20px;" for="selecionarMes">Selecione o mês:</label>
+        <select id="selecionarMes" >
+          <option value="0">Todos os meses</option>
+          <option value="1">Janeiro</option>
+          <option value="2">Fevereiro</option>
+          <option value="3">Março</option>
+          <option value="4">Abril</option>
+          <option value="5">Maio</option>
+          <option value="6">Junho</option>
+          <option value="7">Julho</option>
+          <option value="8">Agosto</option>
+          <option value="9">Setembro</option>
+          <option value="10">Outubro</option>
+          <option value="11">Novembro</option>
+          <option value="12">Dezembro</option>
+        </select>
+
+        <div class="form-group" style="overflow-x: auto;">
+          <table id="tabelaReceitasDespesas">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Categorias</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Data de vencimento</th>
+                <th>Data da pagamento</th>
+                <th>Conta</th>
+                <th>Status</th>
+                <th>Comentário</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <%}%>
+  </main>
+  <script async type="module">
+    import gerarUUID from "/js/gerarUUID.js";
+    import baseApi from "/js/baseApi.js";
+
+    window.addEventListener("load", () => {
+      const form = document.querySelector("form");
+      const inputId = document.getElementById("id");
+      const novoLancamento = document.getElementById("novo");
+      const salvarLancamento = document.getElementById("salvarLancamento");
+      const selecionarMes = document.getElementById("selecionarMes");
+      let todosOsLancamentos = [];
+
+      selecionarMes.addEventListener("change", () => {
+        console.log("teste");
+        buscarReceitasDespesas(selecionarMes.value);
+      });
+
+      if (window.location.pathname === "/receita-despesa") {
+        buscarCategorias();
+        buscarContas();
+      }
+      buscarReceitasDespesas();
+
+      if (window.location.pathname === "/lancamentos")
+        novoLancamento.addEventListener("click", (event) => {
+          window.location.href = "/receita-despesa/novo";
+        });
+
+      salvarLancamento.addEventListener("click", (event) => {
+        event.preventDefault();
+        const categoriaSelecionada = document.getElementById("categorias");
+        const contaSelecionada = document.getElementById("conta");
+        const formData = new FormData(form);
+        limparFormatacaoHTML();
+        const id = formData.get("id");
+
+
+        const payload = {
+          id: id,
+          type: formData.get("tipo"),
+          categories: categoriaSelecionada.options[categoriaSelecionada.selectedIndex].textContent,
+          description: formData.get("descricao"),
+          value: formData.get("valor"),
+          due_date: formData.get("dataVencimento"),
+          payment_date: formData.get("dataPagamento"),
+          account: contaSelecionada.options[contaSelecionada.selectedIndex].textContent,
+          status: formData.get("status"),
+          comments: formData.get("comentario") ?? " ",
+        };
+
+        if (window.location.pathname !== "/receita-despesa/novo" && id && id.trim() !== "") {
+          atualizarReceitaDespesa(id, payload);
+          window.location.href = "/lancamentos";
+        } else {
+          payload.id = gerarUUID();
+          salvarReceitaDespesa(payload);
+        }
+
+        form.reset();
+      });
+
+      function limparFormatacaoHTML() {
+        const form = document.querySelector("form");
+        const inputs = form.querySelectorAll("input, select");
+
+        inputs.forEach(input => {
+          if (input.value && typeof input.value === 'string') {
+            input.value = input.value.trim();
+          }
+        });
+
+        const selects = form.querySelectorAll("select");
+        selects.forEach(select => {
+          const options = select.querySelectorAll("option");
+          options.forEach(option => {
+            if (option.textContent && typeof option.textContent === 'string') {
+              option.textContent = option.textContent.trim();
+            }
+          });
+        });
+      }
+
+
+      function buscarCategorias() {
+        baseApi("/api/categorias")
+          .then((response) => response.json())
+          .then((data) => {
+            const selectCategorias = document.getElementById("categorias");
+            data.forEach((categoria) => {
+              const option = document.createElement("option");
+              option.value = categoria.id;
+              option.textContent = categoria.description;
+              selectCategorias.appendChild(option);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao buscar categorias:", error)
+          );
+      }
+
+      function buscarContas() {
+        baseApi("/api/contas")
+          .then((response) => response.json())
+          .then((data) => {
+            const selectContas = document.getElementById("conta");
+            if (!selectContas) {
+              console.error("Elemento select não encontrado.");
+              return;
+            }
+
+            data.forEach((conta) => {
+              const option = document.createElement("option");
+              option.value = conta.id;
+              option.textContent = conta.description;
+              selectContas.appendChild(option);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao buscar contas:", error)
+          );
+      }
+
+      function buscarReceitasDespesas(mesSelecionado = "0") {
+  baseApi("/api/lancamentos")
+    .then((response) => response.json())
+    .then((data) => {
+      todosOsLancamentos = data;
+
+      if (mesSelecionado !== "0") {
+        data = data.filter(item => {
+          const month = new Date(item.due_date).getMonth() + 1;
+          return month.toString() === mesSelecionado;
+        });
+      }
+      data.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+
+      const tabelaReceitasDespesas = document.getElementById("tabelaReceitasDespesas").querySelector("tbody");
+      tabelaReceitasDespesas.innerHTML = "";
+      if (data.length === 0) {
+        const linhaMensagem = document.createElement("tr");
+        linhaMensagem.innerHTML = `<td colspan="10" style="text-align: center; padding: 40px 20px;">Sem receitas/despesas para este mês.</td>`;
+        tabelaReceitasDespesas.appendChild(linhaMensagem);
+      } else {
+        data.forEach((receitaDespesa) => {
+          const linha = document.createElement("tr");
+          linha.innerHTML = `
+            <td>${receitaDespesa.id}</td>
+            <td>${receitaDespesa.type}</td>
+            <td>${receitaDespesa.categories}</td>
+            <td>${receitaDespesa.description}</td>
+            <td>${receitaDespesa.value}</td>
+            <td>${receitaDespesa.due_date}</td>
+            <td>${receitaDespesa.payment_date}</td>
+            <td>${receitaDespesa.account}</td>
+            <td>${receitaDespesa.status}</td>
+            <td>${receitaDespesa.comments}</td>
+          `;
+          linha.addEventListener("click", () => {
+            const id = receitaDespesa.id;
+            window.location.href = `/receita-despesa/${id}`;
+          });
+          tabelaReceitasDespesas.appendChild(linha);
+        });
+      }
+    })
+    .catch((error) =>
+      console.error("Erro ao buscar receitas e despesas:", error)
+    );
+}
+
+      function atualizarReceitaDespesa(id, receitaDespesa) {
+        baseApi(`/api/receita-despesa/${id}`, "PUT", receitaDespesa)
+          .then(() => {
+            buscarReceitasDespesas();
+            alert("Salvo com sucesso!")
+          })
+          .catch((error) => {
+            alert("Erro ao atualizar receita ou despesa")
+            console.erro("Erro ao atualizar receita ou despesa:", error)
+          }
+          );
+      }
+
+      function salvarReceitaDespesa(receitaDespesa) {
+        baseApi("/api/lancamentos", "POST", receitaDespesa)
+          .then(() => {
+            buscarReceitasDespesas();
+            alert("Salvo com sucesso!")
+          })
+          .catch((error) => {
+            alert("Erro ao salvar receita ou despesa")
+            console.erro("Erro ao salvar receita ou despesa:", error)
+          }
+          );
+      }
+    });
+  </script>
+</body>
+
+</html>

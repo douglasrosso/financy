@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contas</title>
+  <link rel="stylesheet" href="/css/global.css" />
+</head>
+
+<body>
+  <header>
+    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+      <h1>Financy</h1>
+      <li> <a href="/sair">Sair</a></li>
+    </div>
+    <h1>Cadastro de Contas</h1>
+    <nav>
+      <ul>
+        <li><a href="/home">Início</a></li>
+        <li><a href="/categorias">Categorias</a></li>
+        <li><a href="/cadastro-conta">Contas</a></li>
+        <li><a href="/cadastro-usuario">Usuários</a></li>
+        <li><a href="/lancamentos">Lançamentos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+
+  <main>
+    <form id="contaForm">
+      <div class="form-group">
+        <label for="id">ID:</label>
+        <input placeholder="Digite um ID existente para alterar a conta" type="text" id="id" name="id" required
+          disabled />
+        <button id="btnEditar">Editar existente</button>
+      </div>
+      <div class="form-group">
+        <label for="descricao">Descrição da Conta:</label>
+        <input placeholder="Digite a descrição da conta" type="text" id="descricao" name="descricao" required />
+      </div>
+      <div class="form-group">
+        <label for="dados">Saldo:</label>
+        <input placeholder="Digite o dados da conta" type="text" id="dados" name="dados" required />
+      </div>
+      <button type="submit">Salvar</button>
+    </form>
+    <div class="form-group">
+      <table id="tabelaContas">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Descrição</th>
+            <th>Dados</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script async type="module">
+    import gerarUUID from "/js/gerarUUID.js";
+    import baseApi from "/js/baseApi.js";
+
+    window.addEventListener("load", () => {
+      const form = document.querySelector("form");
+      const btnEditar = document.getElementById("btnEditar");
+      const inputId = document.getElementById("id");
+
+      buscarContas();
+
+      btnEditar.addEventListener("click", (event) => {
+        if (inputId.disabled) {
+          inputId.disabled = false;
+          btnEditar.textContent = "Cancelar Edição";
+        } else {
+          inputId.disabled = true;
+          inputId.value = "";
+          btnEditar.textContent = "Editar existente";
+        }
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const id = formData.get("id");
+
+        const payload = {
+          id: id,
+          description: formData.get("descricao"),
+          comments: formData.get("dados"),
+        };
+
+        if (id && id.trim() !== "") {
+          atualizarConta(id, payload);
+        } else {
+          payload.id = gerarUUID();
+          salvarConta(payload);
+        }
+
+        id = "";
+        inputId.value = "";
+        btnEditar.textContent = "Editar existente";
+        inputId.disabled = true;
+        form.reset();
+      });
+
+      function buscarContas() {
+        baseApi("/api/contas")
+          .then((response) => response.json())
+          .then((data) => {
+            tabelaContas.querySelector("tbody").innerHTML = "";
+            data.forEach((conta) => {
+              const linha = document.createElement("tr");
+              linha.innerHTML = `
+                  <td>${conta.id}</td>
+                  <td>${conta.description}</td>
+                  <td>${conta.comments}</td>
+                `;
+              tabelaContas.querySelector("tbody").appendChild(linha);
+            });
+          })
+          .catch((error) => console.error("Erro ao buscar contas:", error));
+      }
+
+      function atualizarConta(id, conta) {
+        baseApi(`/api/contas/${id}`, "PUT", conta)
+          .then(() => {
+            buscarContas();
+            alert("Salvo com sucesso!")
+          })
+          .catch((error) => {
+            alert("Erro ao atualizar conta")
+            console.erro("Erro ao atualizar conta:", error)
+          });
+      }
+
+      function salvarConta(conta) {
+        baseApi("/api/contas", "POST", conta)
+          .then(() => {
+            buscarContas();
+            alert("Salvo com sucesso!")
+          })
+          .catch((error) => {
+            alert("Erro ao salvar conta")
+            console.erro("Erro ao salvar conta:", error)
+          });
+      }
+    });
+  </script>
+</body>
+
+</html>

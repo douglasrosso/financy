@@ -1,0 +1,50 @@
+[
+  {
+    "id": "7a6cc1282c5f6ec0235acd2bfa780145aa2a67fd",
+    "type": "Receita",
+    "categories": "Aluguel",
+    "description": "Recebimento de aluguel do apartamento",
+    "value": "850,00",
+    "due_date": "2023-08-15",
+    "payment_date": "2023-08-10",
+    "account": "Conta Corrente",
+    "status": "Lançada",
+    "comments": "Recebido em dinheiro"
+  },
+  {
+    "id": "16196462-9ff8-4ff4-a6ea-fbe3b43867ee",
+    "type": "Despesa",
+    "categories": "Mercado",
+    "description": "Compra mensal de supermercado",
+    "value": "300,00",
+    "due_date": "2024-04-09",
+    "payment_date": "2024-05-01",
+    "account": "Cartão de Crédito",
+    "status": "Pendente",
+    "comments": "Itens básicos e alimentos não perecíveis"
+  },
+  {
+    "id": "16192462-9ff8-4ff4-a6ea-fbe3b43867ee",
+    "type": "Receita",
+    "categories": "Salário",
+    "description": "Salário do mês de maio",
+    "value": "2500,00",
+    "due_date": "2024-05-05",
+    "payment_date": "2024-05-15",
+    "account": "Conta Salário",
+    "status": "Confirmada",
+    "comments": "Depósito direto na conta"
+  },
+  {
+    "id": "16196412-9ff8-4ff4-a6ea-fbe3b43867ee",
+    "type": "Despesa",
+    "categories": "Transporte",
+    "description": "Recarga mensal do cartão de transporte",
+    "value": "100,00",
+    "due_date": "2024-05-03",
+    "payment_date": "2024-05-04",
+    "account": "Cartão de Transporte",
+    "status": "Confirmada",
+    "comments": "Utilizado para viagens diárias de casa para o trabalho"
+  }
+]
