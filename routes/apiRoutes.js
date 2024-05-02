@@ -160,7 +160,7 @@ function useApiRoutes(router) {
     res.sendStatus(200);
   });
 
-  router.put("/api/lancamentos/:id", apiAuthMiddleware, (req, res) => {
+  router.put("/api/receita-despesa/:id", apiAuthMiddleware, (req, res) => {
     const { id } = req.params;
     const {
       description,

@@ -161,7 +161,10 @@
             buscarUsuarios();
             alert("Salvo com sucesso!")
           })
-          .catch((error) => console.error("Erro ao atualizar usuário:", error));
+          .catch((error) => {
+            alert("Erro ao atualizar usuário")
+            console.erro("Erro ao atualizar usuário:", error)
+          });
       }
 
       function salvarUsuario(usuario) {
@@ -170,7 +173,10 @@
             buscarUsuarios();
             alert("Salvo com sucesso!")
           })
-          .catch((error) => console.error("Erro ao salvar usuário:", error));
+          .catch((error) => {
+            alert("Erro ao salvar usuário")
+            console.error("Erro ao salvar usuário:", error);
+          });
       }
     });
   </script>

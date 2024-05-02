@@ -136,8 +136,10 @@
             buscarCategorias();
             alert("Salvo com sucesso!")
           })
-          .catch((error) =>
-            console.error("Erro ao atualizar categoria:", error)
+          .catch((error) => {
+            alert("Erro ao atualizar categoria")
+            console.erro("Erro ao atualizar categoria:", error)
+          }
           );
       }
 
@@ -147,8 +149,10 @@
             buscarCategorias();
             alert("Salvo com sucesso!")
           })
-          .catch((error) =>
-            console.error("Erro ao salvar categoria:", error)
+          .catch((error) => {
+            alert("Erro ao salvar categoria")
+            console.erro("Erro ao salvar categoria:", error)
+          }
           );
       }
     });

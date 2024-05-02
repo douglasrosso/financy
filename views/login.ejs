@@ -1,77 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PFC - Login</title>
-    <link rel="stylesheet" href="/css/global.css" />
-    <link rel="stylesheet" href="/css/login.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h1>Login</h1>
-      <form>
-        <div class="form-group">
-          <label for="usuario">Usuário:</label>
-          <input
-            value="douglas.rosso"
-            type="text"
-            id="usuario"
-            name="usuario"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="senha">Senha:</label>
-          <input
-            value="1234"
-            type="password"
-            id="senha"
-            name="senha"
-            required
-          />
-        </div>
-        <button type="submit">Entrar</button>
-      </form>
-      <div id="loginError" class="alert alert-danger" style="display: none">
-        Usuário ou senha inválidos!
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PFC - Login</title>
+  <link rel="stylesheet" href="/css/global.css" />
+  <link rel="stylesheet" href="/css/login.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1>Login</h1>
+    <form>
+      <div class="form-group">
+        <label for="usuario">Usuário:</label>
+        <input value="douglas.rosso" type="text" id="usuario" name="usuario" required />
       </div>
+      <div class="form-group">
+        <label for="senha">Senha:</label>
+        <input value="1234" type="password" id="senha" name="senha" required />
+      </div>
+      <button type="submit">Entrar</button>
+    </form>
+    <div id="loginError" class="alert alert-danger" style="display: none">
+      Usuário ou senha inválidos!
     </div>
-    <script async type="module">
-      import baseApi from "/js/baseApi.js";
+  </div>
+  <script async type="module">
+    import baseApi from "/js/baseApi.js";
 
-      window.addEventListener("load", function () {
-        const form = document.querySelector("form");
-        const mensagemDeErro = document.getElementById("loginError");
+    window.addEventListener("load", function () {
+      const form = document.querySelector("form");
+      const mensagemDeErro = document.getElementById("loginError");
 
-        form.addEventListener("submit", function (event) {
-          event.preventDefault();
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-          const formData = new FormData(form);
+        const formData = new FormData(form);
 
-          const payload = {
-            usuario: formData.get("usuario"),
-            senha: formData.get("senha"),
-          };
+        const payload = {
+          usuario: formData.get("usuario"),
+          senha: formData.get("senha"),
+        };
 
-          autenticar();
+        autenticar();
 
-          function autenticar() {
-            baseApi("/api/login", "POST", payload)
-              .then((response) => {
-                if (response.ok) {
-                  window.location.href = "/home";
-                } else {
-                  mensagemDeErro.style.display = "block";
-                }
-              })
-              .catch((error) => {
-                console.error("Erro ao tentar fazer login:", error);
+        function autenticar() {
+          baseApi("/api/login", "POST", payload)
+            .then((response) => {
+              if (response.ok) {
+                window.location.href = "/home";
+              } else {
                 mensagemDeErro.style.display = "block";
-              });
-          }
-        });
+              }
+            })
+            .catch((error) => {
+              alert("Erro ao tentar fazer login");
+              console.error("Erro ao tentar fazer login", error);
+              mensagemDeErro.style.display = "block";
+            });
+        }
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

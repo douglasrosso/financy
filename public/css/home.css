@@ -19,4 +19,12 @@ button {
 button:hover {
   background-color: #0056b3;
 }
- 
+
+#conteudoTabela p {
+  text-align: center;
+  padding: 20px;
+  margin: 20px 20px 0;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 20px;
+}

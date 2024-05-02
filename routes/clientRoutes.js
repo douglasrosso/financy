@@ -20,11 +20,11 @@ function useClientRoutes(router) {
     res.render("cadReceitasDespesas", { receitasDespesas: {}, novoLancamento: false });
   });
 
-  router.get("/lancamentos/novo", authMiddleware, (_, res) => {
+  router.get("/receita-despesa/novo", authMiddleware, (_, res) => {
     res.render("cadReceitasDespesas", { receitasDespesas: {}, novoLancamento: true });
   });
 
-  router.get("/lancamentos/:id", authMiddleware, (req, res) => {
+  router.get("/receita-despesa/:id", authMiddleware, (req, res) => {
     const lancamentosData = JSON.parse(
       fs.readFileSync("./data/entries.json", "utf-8")
     );

@@ -130,7 +130,10 @@
             buscarContas();
             alert("Salvo com sucesso!")
           })
-          .catch((error) => console.error("Erro ao atualizar conta:", error));
+          .catch((error) => {
+            alert("Erro ao atualizar conta")
+            console.erro("Erro ao atualizar conta:", error)
+          });
       }
 
       function salvarConta(conta) {
@@ -139,7 +142,10 @@
             buscarContas();
             alert("Salvo com sucesso!")
           })
-          .catch((error) => console.error("Erro ao salvar conta:", error));
+          .catch((error) => {
+            alert("Erro ao salvar conta")
+            console.erro("Erro ao salvar conta:", error)
+          });
       }
     });
   </script>
