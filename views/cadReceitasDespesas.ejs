@@ -106,8 +106,8 @@
       </form>
       <% } else { %>
         <button id="novo">Novo lançamento</button>
-        <label for="selecionarMes">Selecione o mês:</label>
-        <select id="selecionarMes" onchange="filtrarPorMes()">
+        <label style="margin-top: 20px;" for="selecionarMes">Selecione o mês:</label>
+        <select id="selecionarMes" >
           <option value="0">Todos os meses</option>
           <option value="1">Janeiro</option>
           <option value="2">Fevereiro</option>
@@ -154,9 +154,17 @@
       const novoLancamento = document.getElementById("novo");
       const salvarLancamento = document.getElementById("salvarLancamento");
       const selecionarMes = document.getElementById("selecionarMes");
+      let todosOsLancamentos = [];
 
-      buscarCategorias();
-      buscarContas();
+      selecionarMes.addEventListener("change", () => {
+        console.log("teste");
+        buscarReceitasDespesas(selecionarMes.value);
+      });
+
+      if (window.location.pathname === "/receita-despesa") {
+        buscarCategorias();
+        buscarContas();
+      }
       buscarReceitasDespesas();
 
       if (window.location.pathname === "/lancamentos")
@@ -171,6 +179,7 @@
         const formData = new FormData(form);
         limparFormatacaoHTML();
         const id = formData.get("id");
+
 
         const payload = {
           id: id,
@@ -257,39 +266,53 @@
           );
       }
 
-      function buscarReceitasDespesas() {
-        baseApi("/api/lancamentos")
-          .then((response) => response.json())
-          .then((data) => {
-            data.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+      function buscarReceitasDespesas(mesSelecionado = "0") {
+  baseApi("/api/lancamentos")
+    .then((response) => response.json())
+    .then((data) => {
+      todosOsLancamentos = data;
 
-            const tabelaReceitasDespesas = document.getElementById("tabelaReceitasDespesas").querySelector("tbody");
-            tabelaReceitasDespesas.innerHTML = "";
-            data.forEach((receitaDespesa) => {
-              const linha = document.createElement("tr");
-              linha.innerHTML = `
-          <td>${receitaDespesa.id}</td>
-          <td>${receitaDespesa.type}</td>
-          <td>${receitaDespesa.categories}</td>
-          <td>${receitaDespesa.description}</td>
-          <td>${receitaDespesa.value}</td>
-          <td>${receitaDespesa.due_date}</td>
-          <td>${receitaDespesa.payment_date}</td>
-          <td>${receitaDespesa.account}</td>
-          <td>${receitaDespesa.status}</td>
-          <td>${receitaDespesa.comments}</td>
-        `;
-              linha.addEventListener("click", () => {
-                const id = receitaDespesa.id;
-                window.location.href = `/receita-despesa/${id}`;
-              });
-              tabelaReceitasDespesas.appendChild(linha);
-            });
-          })
-          .catch((error) =>
-            console.error("Erro ao buscar receitas e despesas:", error)
-          );
+      if (mesSelecionado !== "0") {
+        data = data.filter(item => {
+          const month = new Date(item.due_date).getMonth() + 1;
+          return month.toString() === mesSelecionado;
+        });
       }
+      data.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+
+      const tabelaReceitasDespesas = document.getElementById("tabelaReceitasDespesas").querySelector("tbody");
+      tabelaReceitasDespesas.innerHTML = "";
+      if (data.length === 0) {
+        const linhaMensagem = document.createElement("tr");
+        linhaMensagem.innerHTML = `<td colspan="10" style="text-align: center; padding: 40px 20px;">Sem receitas/despesas para este mês.</td>`;
+        tabelaReceitasDespesas.appendChild(linhaMensagem);
+      } else {
+        data.forEach((receitaDespesa) => {
+          const linha = document.createElement("tr");
+          linha.innerHTML = `
+            <td>${receitaDespesa.id}</td>
+            <td>${receitaDespesa.type}</td>
+            <td>${receitaDespesa.categories}</td>
+            <td>${receitaDespesa.description}</td>
+            <td>${receitaDespesa.value}</td>
+            <td>${receitaDespesa.due_date}</td>
+            <td>${receitaDespesa.payment_date}</td>
+            <td>${receitaDespesa.account}</td>
+            <td>${receitaDespesa.status}</td>
+            <td>${receitaDespesa.comments}</td>
+          `;
+          linha.addEventListener("click", () => {
+            const id = receitaDespesa.id;
+            window.location.href = `/receita-despesa/${id}`;
+          });
+          tabelaReceitasDespesas.appendChild(linha);
+        });
+      }
+    })
+    .catch((error) =>
+      console.error("Erro ao buscar receitas e despesas:", error)
+    );
+}
 
       function atualizarReceitaDespesa(id, receitaDespesa) {
         baseApi(`/api/receita-despesa/${id}`, "PUT", receitaDespesa)
