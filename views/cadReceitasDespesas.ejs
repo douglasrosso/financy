@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Receitas e Despesas</title>
+  <title>Financy</title>
   <link rel="stylesheet" href="/css/global.css" />
 </head>
 
@@ -107,7 +107,7 @@
       <% } else { %>
         <button id="novo">Novo lançamento</button>
         <label style="margin-top: 20px;" for="selecionarMes">Selecione o mês:</label>
-        <select id="selecionarMes" >
+        <select id="selecionarMes">
           <option value="0">Todos os meses</option>
           <option value="1">Janeiro</option>
           <option value="2">Fevereiro</option>
@@ -144,6 +144,10 @@
         </div>
         <%}%>
   </main>
+  <footer>
+    <p>&copy; 2024 Financy. Todos os direitos reservados.</p>
+    <p>Developed by: Douglas Rosso.</p>
+  </footer>
   <script async type="module">
     import gerarUUID from "/js/gerarUUID.js";
     import baseApi from "/js/baseApi.js";
@@ -267,29 +271,29 @@
       }
 
       function buscarReceitasDespesas(mesSelecionado = "0") {
-  baseApi("/api/lancamentos")
-    .then((response) => response.json())
-    .then((data) => {
-      todosOsLancamentos = data;
+        baseApi("/api/lancamentos")
+          .then((response) => response.json())
+          .then((data) => {
+            todosOsLancamentos = data;
 
-      if (mesSelecionado !== "0") {
-        data = data.filter(item => {
-          const month = new Date(item.due_date).getMonth() + 1;
-          return month.toString() === mesSelecionado;
-        });
-      }
-      data.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+            if (mesSelecionado !== "0") {
+              data = data.filter(item => {
+                const month = new Date(item.due_date).getMonth() + 1;
+                return month.toString() === mesSelecionado;
+              });
+            }
+            data.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
 
-      const tabelaReceitasDespesas = document.getElementById("tabelaReceitasDespesas").querySelector("tbody");
-      tabelaReceitasDespesas.innerHTML = "";
-      if (data.length === 0) {
-        const linhaMensagem = document.createElement("tr");
-        linhaMensagem.innerHTML = `<td colspan="10" style="text-align: center; padding: 40px 20px;">Sem receitas/despesas para este mês.</td>`;
-        tabelaReceitasDespesas.appendChild(linhaMensagem);
-      } else {
-        data.forEach((receitaDespesa) => {
-          const linha = document.createElement("tr");
-          linha.innerHTML = `
+            const tabelaReceitasDespesas = document.getElementById("tabelaReceitasDespesas").querySelector("tbody");
+            tabelaReceitasDespesas.innerHTML = "";
+            if (data.length === 0) {
+              const linhaMensagem = document.createElement("tr");
+              linhaMensagem.innerHTML = `<td colspan="10" style="text-align: center; padding: 40px 20px;">Sem receitas/despesas para este mês.</td>`;
+              tabelaReceitasDespesas.appendChild(linhaMensagem);
+            } else {
+              data.forEach((receitaDespesa) => {
+                const linha = document.createElement("tr");
+                linha.innerHTML = `
             <td>${receitaDespesa.id}</td>
             <td>${receitaDespesa.type}</td>
             <td>${receitaDespesa.categories}</td>
@@ -301,18 +305,18 @@
             <td>${receitaDespesa.status}</td>
             <td>${receitaDespesa.comments}</td>
           `;
-          linha.addEventListener("click", () => {
-            const id = receitaDespesa.id;
-            window.location.href = `/receita-despesa/${id}`;
-          });
-          tabelaReceitasDespesas.appendChild(linha);
-        });
+                linha.addEventListener("click", () => {
+                  const id = receitaDespesa.id;
+                  window.location.href = `/receita-despesa/${id}`;
+                });
+                tabelaReceitasDespesas.appendChild(linha);
+              });
+            }
+          })
+          .catch((error) =>
+            console.error("Erro ao buscar receitas e despesas:", error)
+          );
       }
-    })
-    .catch((error) =>
-      console.error("Erro ao buscar receitas e despesas:", error)
-    );
-}
 
       function atualizarReceitaDespesa(id, receitaDespesa) {
         baseApi(`/api/receita-despesa/${id}`, "PUT", receitaDespesa)

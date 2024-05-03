@@ -6,6 +6,10 @@ section {
   margin-bottom: 20px;
 }
 
+body {
+  height: 100vh;
+}
+
 button {
   padding: 10px 20px;
   margin-right: 10px;
