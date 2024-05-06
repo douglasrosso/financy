@@ -5,15 +5,31 @@ function searchReleaseMiddleware(req, res, next) {
     fs.readFileSync("./data/entries.json", "utf-8")
   );
   const hoje = new Date().toISOString().split("T")[0];
-  const lancamentoDoDia = entriesData.find(
-    (lancamento) => lancamento.due_date === hoje
+
+  const lancamentosDoDia = entriesData.filter(
+    (entry) =>
+      entry.due_date === hoje &&
+      (!entry.payment_date || entry.payment_date === "")
   );
   const lancamentosEmAtraso = entriesData.filter(
-    (lancamento) => lancamento.due_date < hoje
+    (entry) =>
+      new Date(entry.due_date) <= new Date(hoje) &&
+      (!entry.payment_date || entry.payment_date === "")
   );
 
-  res.locals.lancamentoDoDia = lancamentoDoDia;
-  res.locals.lancamentosEmAtraso = lancamentosEmAtraso;
+  const lancamentosUnicos = new Set();
+  const lancamentosFiltrados = [];
+
+  [...lancamentosDoDia, ...lancamentosEmAtraso].forEach((entry) => {
+    if (!lancamentosUnicos.has(entry.id)) {
+      lancamentosUnicos.add(entry.id);
+      lancamentosFiltrados.push(entry);
+    }
+  });
+
+  res.locals.numLancamentosDoDia = lancamentosDoDia.length;
+  res.locals.numLancamentosEmAtraso = lancamentosEmAtraso.length;
+  res.locals.lancamentosNoModal = lancamentosFiltrados;
 
   next();
 }

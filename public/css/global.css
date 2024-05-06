@@ -33,7 +33,7 @@ main {
 }
 
 header {
-  background-color: #2e2d5e;
+  background-color: #120f95;
   color: #fff;
   padding: 20px;
   text-align: center;
@@ -132,10 +132,48 @@ button:hover {
 
 
 footer {
-  background-color: #2e2d5e;
+  background-color: #120f95;
   position: relative;
   bottom: 0;
   color: #fff;
   padding: 20px;
   text-align: start;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe; 
+  margin: 15% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; 
+  min-height: 150px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  position: relative;
+  top: -15px;   
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }

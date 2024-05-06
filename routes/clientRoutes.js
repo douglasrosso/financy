@@ -2,6 +2,7 @@ import initialAuthMiddleware from "../middlewares/initialAuthMiddleware.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import logoutMiddleware from "../middlewares/logoutMiddleware.js";
 import fs from "fs";
+import searchReleaseMiddleware from "../middlewares/searchReleaseMiddleware.js";
 
 function useClientRoutes(router) {
   router.get("/", initialAuthMiddleware, (_, res) => {
@@ -12,16 +13,22 @@ function useClientRoutes(router) {
     res.render("login");
   });
 
-  router.get("/home", authMiddleware, (_, res) => {
-    res.render("home");
+  router.get("/home", authMiddleware, searchReleaseMiddleware, (_, res) => {
+    res.render("home", { lancamentosNoModal: res.locals.lancamentosNoModal });
   });
 
   router.get("/lancamentos", authMiddleware, (_, res) => {
-    res.render("cadReceitasDespesas", { receitasDespesas: {}, novoLancamento: false });
+    res.render("cadReceitasDespesas", {
+      receitasDespesas: {},
+      novoLancamento: false,
+    });
   });
 
   router.get("/receita-despesa/novo", authMiddleware, (_, res) => {
-    res.render("cadReceitasDespesas", { receitasDespesas: {}, novoLancamento: true });
+    res.render("cadReceitasDespesas", {
+      receitasDespesas: {},
+      novoLancamento: true,
+    });
   });
 
   router.get("/receita-despesa/:id", authMiddleware, (req, res) => {
@@ -33,7 +40,10 @@ function useClientRoutes(router) {
       (lanc) => lanc.id == req.params.id
     );
 
-    res.render("cadReceitasDespesas", { receitasDespesas, novoLancamento: false });
+    res.render("cadReceitasDespesas", {
+      receitasDespesas,
+      novoLancamento: false,
+    });
   });
 
   router.get("/categorias", authMiddleware, (_, res) => {

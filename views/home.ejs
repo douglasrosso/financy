@@ -46,12 +46,65 @@
     <p>Developed by: Douglas Rosso.</p>
   </footer>
 
+  <div id="myModal" class="modal"
+    style="display: <%= numLancamentosDoDia > 0 || numLancamentosEmAtraso > 0 ? 'block' : 'none' %>;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h1 id="modal-message">Lançamentos do Dia e em Atraso</h1>
+      <div>
+        <% if (numLancamentosDoDia> 0) { %>
+          <p>Você tem <strong>
+              <%= numLancamentosEmAtraso %>
+            </strong>lançamentos que vencem hoje!</p>
+          <% } %>
+            <% if (numLancamentosEmAtraso> 0) { %>
+              <p>Você tem <strong>
+                  <%= numLancamentosEmAtraso %>
+                </strong>lançamentos em atraso!</p>
+              <% } %>
+                <% if (lancamentosNoModal.length> 0) { %>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Data de Vencimento</th>
+                        <th>Valor</th>
+                        <th>Descrição</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% lancamentosNoModal.forEach(lancamento=> { %>
+                        <tr>
+                          <td>
+                            <%= lancamento.id %>
+                          </td>
+                          <td>
+                            <%= lancamento.due_date %>
+                          </td>
+                          <td>
+                            <%= lancamento.value %>
+                          </td>
+                          <td>
+                            <%= lancamento.description %>
+                          </td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                  </table>
+                  <% } else { %>
+                    <p>Não há lançamentos para hoje ou em atraso.</p>
+                    <% } %>
+      </div>
+    </div>
+  </div>
+
   <script async type="module">
     import gerarUUID from "/js/gerarUUID.js";
     import baseApi from "/js/baseApi.js";
 
     window.addEventListener("load", () => {
       buscarReceitasDespesas();
+      
       const hoje = new Date().toISOString().split('T')[0];
       function buscarReceitasDespesas() {
         baseApi("/api/lancamentos")
@@ -118,6 +171,10 @@
             console.error("Erro ao buscar receitas e despesas:", error)
           );
       }
+
+      document.getElementsByClassName('close')[0].addEventListener('click', function () {
+        document.getElementById('myModal').style.display = 'none';
+      });
     })
   </script>
 </body>

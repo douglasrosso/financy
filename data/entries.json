@@ -6,7 +6,7 @@
     "description": "Recebimento de aluguel do apartamento",
     "value": "850,00",
     "due_date": "2023-08-15",
-    "payment_date": "2023-08-10",
+    "payment_date": "",
     "account": "Conta Corrente",
     "status": "Lançada",
     "comments": "Recebido em dinheiro"
@@ -17,8 +17,8 @@
     "categories": "Mercado",
     "description": "Compra mensal de supermercado",
     "value": "300,00",
-    "due_date": "2024-04-09",
-    "payment_date": "2024-05-01",
+    "due_date": "2024-05-04",
+    "payment_date": "",
     "account": "Cartão de Crédito",
     "status": "Pendente",
     "comments": "Itens básicos e alimentos não perecíveis"
@@ -29,8 +29,8 @@
     "categories": "Salário",
     "description": "Salário do mês de maio",
     "value": "2500,00",
-    "due_date": "2024-05-05",
-    "payment_date": "2024-05-15",
+    "due_date": "2024-05-04",
+    "payment_date": "",
     "account": "Conta Salário",
     "status": "Confirmada",
     "comments": "Depósito direto na conta"
