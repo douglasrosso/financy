@@ -13,5 +13,10 @@
     "id": "a8c217c7-c09a-4470-a730-54be716c098a",
     "description": "Pensão",
     "type": "Despesa"
+  },
+  {
+    "id": "51900f94-8d99-4f97-b86a-1f186dd7706c",
+    "description": "Teste000",
+    "type": "Receita"
   }
 ]

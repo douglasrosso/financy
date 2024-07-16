@@ -25,5 +25,14 @@
     "pwd": "122345",
     "level": "normal",
     "status": "on"
+  },
+  {
+    "id": "c90d257f-c9ca-4853-8b69-ddd396d0af2c",
+    "name": "Anderson",
+    "email": "anderson@teste.com",
+    "user": "anderson1",
+    "pwd": "123",
+    "level": "admin",
+    "status": "off"
   }
 ]
